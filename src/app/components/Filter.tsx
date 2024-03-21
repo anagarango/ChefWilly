@@ -22,7 +22,7 @@ export default function FilterCard({type="mealType", stateArray, handleSelected=
       <MenuList height="245px" overflowY="scroll">
         <MenuOptionGroup type="checkbox">
           {Filter[type].list.map((o,i)=>(
-            <MenuItemOption key={i} value={o} isChecked={stateArray.includes(o)} onClick={() => handleSelected(o, settingState, stateArray)} closeOnSelect={false} textTransform="capitalize">{o}</MenuItemOption>
+            <MenuItemOption key={i} fontSize="sm" value={o} isChecked={stateArray.includes(o)} onClick={() => handleSelected(o, settingState, stateArray)} closeOnSelect={false} textTransform="capitalize">{o}</MenuItemOption>
           ))}
         </MenuOptionGroup>
       </MenuList>
