@@ -1,0 +1,65 @@
+{
+  "mealType":{
+    "title":"Meal Type",
+    "list":[
+      "main course",
+      "side dish",
+      "dessert",
+      "appetizer",
+      "salad",
+      "breakfast",
+      "soup",
+      "fingerfood",
+      "snack"
+    ]
+  },
+  "cuisines":{
+    "title":"Cuisines",
+    "list":[
+      "African",
+      "Asian",
+      "American",
+      "British",
+      "Cajun",
+      "Caribbean",
+      "Chinese",
+      "Eastern European",
+      "European",
+      "French",
+      "German",
+      "Greek",
+      "Indian",
+      "Irish",
+      "Italian",
+      "Japanese",
+      "Jewish",
+      "Korean",
+      "Latin American",
+      "Mediterranean",
+      "Mexican",
+      "Middle Eastern",
+      "Nordic",
+      "Southern",
+      "Spanish",
+      "Thai",
+      "Vietnamese"
+    ]
+  },
+  "intolerances":{
+    "title":"Intolerances",
+    "list":[
+      "Dairy",
+      "Egg",
+      "Gluten",
+      "Grain",
+      "Peanut",
+      "Seafood",
+      "Sesame",
+      "Shellfish",
+      "Soy",
+      "Sulfite",
+      "Tree Nut",
+      "Wheat"
+    ]
+  }
+}

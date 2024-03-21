@@ -29,6 +29,7 @@ export default function Home() {
     const equipmentResult = await equipmentResponse.data
     setChosenRecipe(result)
     setEquipment(equipmentResult.equipment)
+    console.log(result)
     setDiet([{result: result.dairyFree, name: "dairy-free"}, {result: result.glutenFree, name: "gluten-free"}, {result: result.vegan, name: "vegan"}, {result: result.vegetarian, name: "vegetarian"}, {result: result.veryHealthy, name: "very-healthy"}, {result: result.veryPopular, name: "very-popular"}])
   }
 
@@ -77,7 +78,7 @@ export default function Home() {
             </Flex>
             <Heading as='h4' size='md' paddingBottom="5px">Instructions:</Heading>
             <ol style={{padding:"0 0 0 35px"}}>
-              {chosenRecipe.analyzedInstructions && chosenRecipe.analyzedInstructions[0].steps.map((o:any,i:number)=>(
+              {chosenRecipe.analyzedInstructions?.length > 0 && chosenRecipe.analyzedInstructions[0].steps.map((o:any,i:number)=>(
                 <li key={i} style={{transitionDuration:"0.3s"}}>{o.step}</li>
               ))}
             </ol>
