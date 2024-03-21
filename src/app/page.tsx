@@ -33,13 +33,10 @@ export default function Home() {
 
 
   const handleRecipeSearch = async (type: string) => {
-    const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.NEXT_PUBLIC_API_KEY}&includeIngredients=${selectedIngredients.join(",")}&type=${selectedMealTypes.join(",")}&cuisine=${selectedCuisines.join(",")}&intolerances=${selectedIntolerances.join(",")}&number=${recipeResults}&sort=min-missing-ingredients&fillIngredients=true`);
+    const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.NEXT_PUBLIC_API_KEY}&includeIngredients=${selectedIngredients.join(",")}&type=${selectedMealTypes.join(",")}&cuisine=${selectedCuisines.join(",")}&intolerances=${selectedIntolerances.join(",")}&number=${type === "MoreResults" ? recipeResults + 20 : 20}&sort=min-missing-ingredients&fillIngredients=true`);
     const result = await response.data;
+    type === "MoreResults" ? setRecipeResults(prevPage => prevPage + 20) : setRecipeResults(20);
     setRecipes(result.results);
-    console.log(type);
-    type === "MoreResults" 
-        ? setRecipeResults(prevPage => prevPage + 20)
-        : setRecipeResults(20);
 };
 
 
@@ -136,7 +133,7 @@ export default function Home() {
                 <Heading as='h5' size='sm' paddingTop="15px">No Results ATM</Heading>
               </Flex>
             }
-            {(recipeResults < 101 && recipes.length > 0) && <Button width="100%" backgroundColor="green.300" _hover={{backgroundColor:"green.400"}} padding="20px 0" textAlign='center' marginTop="20px" cursor="pointer">Show More Results</Button>}
+            {(recipeResults < 101 && recipes.length > 0) && <Button width="100%" backgroundColor="green.300" _hover={{backgroundColor:"green.400"}} padding="20px 0" textAlign='center' marginTop="20px" cursor="pointer" onClick={()=>handleRecipeSearch("MoreResults")}>Show More Results</Button>}
           </Flex>
         </Box>
       </Box>
