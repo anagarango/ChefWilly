@@ -1,6 +1,5 @@
 "use client"
 import Image from "next/image";
-import styles from "./page.module.css";
 import { Button, Box } from '@chakra-ui/react'
 import axios from "axios";
 import React, {useState} from "react"
@@ -29,7 +28,7 @@ export default function Home() {
   }
 
   return (
-    <main className={styles.main}>
+    <main>
       <Button colorScheme='blue' onClick={()=>handleRecipeSearch()}>Search Recipes</Button>
       {recipes.map((o,i)=>(
         <div key={i} onClick={()=>handleRecipeInformation(o)}>
