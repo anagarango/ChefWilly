@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { Button, Box, Flex, Checkbox, Heading, Text, Divider } from '@chakra-ui/react'
 import axios from "axios";
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useState, Suspense} from "react"
 import { useRouter } from "next/navigation";
 import { useSearchParams } from 'next/navigation'
 
@@ -16,8 +16,8 @@ interface RecipeCard {
 
 export default function Recipe() {
   const r = useRouter()
-
   const searchParams = useSearchParams()
+
   const id = searchParams.get('id')
   const [chosenRecipe, setChosenRecipe] = useState<any>({})
   const [relatedRecipes, setRelatedRecipes] = useState<object[]>([])
@@ -52,6 +52,7 @@ export default function Recipe() {
 
   return (
     <main>
+      <Suspense fallback={<p>Loading feed...</p>}>
        <Box bg="#E7E2DF" px="20px" py="7px" cursor="pointer">
         <Heading as='h4' size='md' onClick={()=>r.push("/")}>Chef Willy</Heading>
       </Box>
@@ -129,6 +130,7 @@ export default function Recipe() {
         </Flex>
         </Flex>
       </Flex>
+      </Suspense>
     </main>
   );
 }
