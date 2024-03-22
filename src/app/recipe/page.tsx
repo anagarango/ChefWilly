@@ -14,7 +14,7 @@ interface RecipeCard {
   imageType: string
 }
 
-export default function Recipe() {
+function Recipe() {
   const r = useRouter()
   const searchParams = useSearchParams()
 
@@ -52,7 +52,6 @@ export default function Recipe() {
 
   return (
     <main>
-      <Suspense fallback={<p>Loading feed...</p>}>
        <Box bg="#E7E2DF" px="20px" py="7px" cursor="pointer">
         <Heading as='h4' size='md' onClick={()=>r.push("/")}>Chef Willy</Heading>
       </Box>
@@ -130,7 +129,14 @@ export default function Recipe() {
         </Flex>
         </Flex>
       </Flex>
-      </Suspense>
     </main>
   );
+}
+
+export default function RecipeCard(){
+  return (
+    <Suspense fallback={<p>Loading feed...</p>}>
+      <Recipe/>
+    </Suspense>
+  )
 }
