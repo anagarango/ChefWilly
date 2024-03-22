@@ -16,13 +16,11 @@ interface RecipeCard {
 
 export default function Recipe() {
   const r = useRouter()
-  const storedRecipesString = localStorage.getItem("relatedRecipes");
-  const storedRecipes: object[] = storedRecipesString ? JSON.parse(storedRecipesString) : [];
 
   const searchParams = useSearchParams()
   const id = searchParams.get('id')
   const [chosenRecipe, setChosenRecipe] = useState<any>({})
-  const [relatedRecipes, setRelatedRecipes] = useState<object[]>(storedRecipes || [])
+  const [relatedRecipes, setRelatedRecipes] = useState<object[]>([])
   const [equipment, setEquipment] = useState<any>()
   const [diet, setDiet] = useState<any>()
   const [missingHover, setMissingHover] = useState<string>("")
@@ -44,6 +42,12 @@ export default function Recipe() {
 
   useEffect(()=>{
     handleGrabbingRecipeInformation()
+
+    const storedRecipesString = localStorage.getItem("relatedRecipes");
+    if (storedRecipesString) {
+      const storedRecipes: object[] = JSON.parse(storedRecipesString);
+      setRelatedRecipes(storedRecipes);
+    }
   },[])
 
   return (

@@ -17,10 +17,7 @@ interface RecipeCard {
 
 export default function Home() {
   const r = useRouter()
-
-  const storedRecipesString = localStorage.getItem("relatedRecipes");
-  const storedRecipes: object[] = storedRecipesString ? JSON.parse(storedRecipesString) : [];
-  const [recipes, setRecipes] = useState<object[]>(storedRecipes);
+  const [recipes, setRecipes] = useState<object[]>([]);
   const [missingHover, setMissingHover] = useState<string>("")
   const [ingredient, setIngredient] = useState<string>("")
   const [recipeResults, setRecipeResults] = useState<number>(20)
@@ -67,6 +64,14 @@ export default function Home() {
       setIngredientData("")
     }
   }
+
+  useEffect(() => {
+    const storedRecipesString = localStorage.getItem("relatedRecipes");
+    if (storedRecipesString) {
+      const storedRecipes: object[] = JSON.parse(storedRecipesString);
+      setRecipes(storedRecipes);
+    }
+  }, []);
 
 
   return (
