@@ -16,9 +16,17 @@ main {
 }
 
 a {
-  color: blue !important;
+  color: #D69E2E !important;
 }
 
 datalist#ingredient-list *{
   background-color: aqua;
+}
+
+#what {
+  min-width: 170px !important
+}
+
+#checkbox label span.chakra-checkbox__control{
+  border: 2px solid #F3C560 !important
 }

@@ -18,7 +18,9 @@ interface RecipeCard {
 export default function Home() {
   const r = useRouter()
 
-  const [recipes, setRecipes] = useState<object[]>([])
+  const storedRecipesString = localStorage.getItem("relatedRecipes");
+  const storedRecipes: object[] = storedRecipesString ? JSON.parse(storedRecipesString) : [];
+  const [recipes, setRecipes] = useState<object[]>(storedRecipes);
   const [missingHover, setMissingHover] = useState<string>("")
   const [ingredient, setIngredient] = useState<string>("")
   const [recipeResults, setRecipeResults] = useState<number>(20)
@@ -41,6 +43,7 @@ export default function Home() {
 
 
   const handleRecipeInformation = async (recipe:RecipeCard) => {
+    localStorage.setItem("relatedRecipes", JSON.stringify(recipes))
     r.push(`/recipe?title=${recipe.title}&id=${recipe.id}`)
   }
 
@@ -69,11 +72,11 @@ export default function Home() {
   return (
     <main onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleIngredientDataShow((e.target as HTMLButtonElement).id)}>
       <Box bg="#E7E2DF" px="20px" py="7px" >
-        <Heading as='h4' size='md'>Chef Willy</Heading>
+        <Heading as='h4' size='md' cursor="pointer">Chef Willy</Heading>
       </Box>
       <Box p="0rem 3rem">
         <Box p="40px">
-          <Box bg="white" p="4" borderRadius="25px" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)">
+          <Box bg="white" p="4" borderRadius="25px" boxShadow="0px 5px 10px 0px rgba(0,0,0,0.3)">
             <Flex width="100%" justifyContent="space-between">
               <Flex gap="3" position="relative">
                 <Input id="ingredient-selection"  size='sm' variant='filled' placeholder='Insert Ingredients...' value={ingredient} onChange={(e)=>setIngredient(e.target.value)} onClick={()=>setIngredientData("acorn squash")} borderRadius="5px"/>
@@ -116,11 +119,11 @@ export default function Home() {
                 <Image src={o.image} alt={o.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
                 <Text wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{o.title}</Text>
                 {missingHover == o.title && 
-                  <Box position="absolute" bg="rgba(255,255,255,0.9)" width="170px" height="180px" top="0" borderRadius="25px" p="15px" overflowY="scroll">
-                    <Text fontWeight="bold" wordBreak="normal" textAlign="center">Missing Ingredients:</Text>
+                  <Box position="absolute" bg="rgba(255,255,250,0.9)" width="170px" height="180px" top="0" borderRadius="25px" p="15px" overflowY="scroll">
+                    <Text fontWeight="bold" wordBreak="normal" textAlign="center" fontSize="sm">Missing Ingredients:</Text>
                     <ol style={{padding:"0 0 0 35px"}}>
                       {o.missedIngredients.map((o:any,i:number)=>(
-                        <li key={i} style={{fontWeight:"500"}}>{o.name}</li>
+                        <li key={i} style={{fontWeight:"500", fontSize:"13px"}}>{o.name}</li>
                       ))}
                     </ol>
                   </Box>
