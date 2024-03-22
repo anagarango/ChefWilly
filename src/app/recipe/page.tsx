@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { Button, Box, Flex, Checkbox, Heading, Text, Divider } from '@chakra-ui/react'
+import { Button, Box, Flex, Checkbox, Heading, Text } from '@chakra-ui/react'
 import axios from "axios";
 import React, {useEffect, useState, Suspense} from "react"
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ export default function Recipe() {
   const r = useRouter()
   const searchParams = useSearchParams()
 
-  const id = searchParams.get('id')
+  const search = searchParams.get('id')
   const [chosenRecipe, setChosenRecipe] = useState<any>({})
   const [relatedRecipes, setRelatedRecipes] = useState<object[]>([])
   const [equipment, setEquipment] = useState<any>()
@@ -26,8 +26,8 @@ export default function Recipe() {
   const [missingHover, setMissingHover] = useState<string>("")
 
   const handleGrabbingRecipeInformation = async () => {
-    const response = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${process.env.NEXT_PUBLIC_API_KEY}`)
-    const equipmentResponse = await axios.get(`https://api.spoonacular.com/recipes/${id}/equipmentWidget.json?apiKey=${process.env.NEXT_PUBLIC_API_KEY}`)
+    const response = await axios.get(`https://api.spoonacular.com/recipes/${search}/information?apiKey=${process.env.NEXT_PUBLIC_API_KEY}`)
+    const equipmentResponse = await axios.get(`https://api.spoonacular.com/recipes/${search}/equipmentWidget.json?apiKey=${process.env.NEXT_PUBLIC_API_KEY}`)
     const result = await response.data
     const equipmentResult = await equipmentResponse.data
     setChosenRecipe(result)
