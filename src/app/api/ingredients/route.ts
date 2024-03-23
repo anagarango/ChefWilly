@@ -18,13 +18,12 @@ export async function POST(request: NextRequest) {
   try {
     const { user_id, ingredient } = await request.json();
     const connectionInstance = await connection;
-    const [rows] = await connectionInstance.query("SELECT ingredient_name FROM ingredients WHERE user_id = ? AND ingredient_name = ?", [user_id, ingredient.name]);
-    if (rows) {
-      return NextResponse.json({error: {"title": "Ingredient Already Exists!", "description":"This ingrdient has already been added", "status": "error", "duration":4000}});
+    const [rows] = await connectionInstance.query("SELECT ingredient_name FROM ingredients WHERE user_id = ? AND ingredient_name = ?", [user_id, ingredient[0].name]);
+    if (rows[0]) {
+      return NextResponse.json({error: {"title": "Ingredient Already Exists!", "description":"This ingrdient has already been added", "status": "error", "duration":6000}});
     }
-    console.log(rows)
-    // const result = await connectionInstance.query("INSERT INTO ingredients (user_id, ingredient_id, ingredient_name, aisle, image) VALUES (?, ?, ?, ?, ?)", [user_id, ingredient[0].id, ingredient[0].name, ingredient[0].aisle, ingredient[0].image]);
-    return NextResponse.json({ message: {"title": "Ingredient Added!", "description":"We've added your ingredient for you.", "status": "success", "duration":4000}, ingredient: {"user_id": user_id, "ingredient_id":ingredient[0].id, "ingredient_name":ingredient[0].name, "aisle" : ingredient[0].aisle, "image": ingredient[0].image}});
+    const result = await connectionInstance.query("INSERT INTO ingredients (user_id, ingredient_id, ingredient_name, aisle, image) VALUES (?, ?, ?, ?, ?)", [user_id, ingredient[0].id, ingredient[0].name, ingredient[0].aisle, ingredient[0].image]);
+    return NextResponse.json({ message: {"title": "Ingredient Added!", "description":"We've added your ingredient for you.", "status": "success", "duration":6000}, ingredient: {"user_id": user_id, "ingredient_id":ingredient[0].id, "ingredient_name":ingredient[0].name, "aisle" : ingredient[0].aisle, "image": ingredient[0].image}});
 
   } catch (error:any) {
     console.log(error)
@@ -35,11 +34,11 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
+    const user_id = searchParams.get('user_id');
     const ingredient_id = searchParams.get('ingredient_id');
-    console.log(ingredient_id)
-   
+
     const connectionInstance = await connection;
-    const [rows]:any = await connectionInstance.query("DELETE FROM ingredients WHERE id = ?", ingredient_id);
+    const [rows]:any = await connectionInstance.query("DELETE FROM ingredients WHERE user_id = ? AND ingredient_id = ?", [user_id, ingredient_id]);
     return NextResponse.json(rows)
   } catch (error:any) {
     console.log(error)

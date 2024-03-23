@@ -74,15 +74,16 @@ function Recipe() {
   }
 
   
-  const handleDeleteIngredient = async (ingredient_id:number) => {
+  const handleDeleteIngredient = async (user_id:number, ingredient_id:number) => {
     const response = await axios({
       method: 'delete',
-      url: `/api/ingredients?ingredient_id=${ingredient_id}`,
+      url: `/api/ingredients?user_id=${user_id}&ingredient_id=${ingredient_id}`,
     });
     const result = await response.data
+    
     if(result){
       setIngredientArray((oldValues: any[]) => {
-        return oldValues.filter(object => object.id !== ingredient_id)
+        return oldValues.filter(object => object.ingredient_id !== ingredient_id)
       })
     }
   }
@@ -114,11 +115,11 @@ function Recipe() {
 
   return (
     <main onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleIngredientDataShow((e.target as HTMLButtonElement).id)} style={{backgroundColor:Colors.lightYellow}}>
-      <Flex flexDir="column" alignItems="center" position="relative" backgroundImage="url('/YellowSquiggle.svg')"  backgroundSize="950px auto" backgroundRepeat="repeat-x" height="300px">
-        <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:any) => setCurrentUser(e)}/>
-        <Flex marginY="30" width="90%" padding="3" height="fit-content" maxWidth="800px" bgColor="white" borderRadius="10" gap="4">
-          <Input id="ingredient-selection"  size='sm' variant='filled' bgColor={Colors.mediumYellow} _hover={{bgColor:Colors.mediumYellow}} placeholder='Insert Ingredients...' value={ingredient} onChange={(e)=>setIngredient(e.target.value)} onClick={()=>setIngredientData("acorn squash")} borderRadius="5px"/>
-          <Button size='sm' colorScheme="green" onClick={()=>handleAddingIngredients(ingredient)}>Add</Button>
+      <Flex flexDir="column" alignItems="center" position="relative" backgroundImage="url('/YellowSquiggle.svg')"  backgroundSize="auto 100%" px="6" backgroundRepeat="x-repeat" height="300px">
+        <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:any) => setCurrentUser(e)} color={{"bg":Colors.lightYellow, text:Colors.strongYellow}} />
+        <Flex marginY="30" width="100%" padding="3" height="fit-content" maxWidth="1100px" bgColor="white" borderRadius="10" gap="4">
+          <Input id="ingredient-selection" type="text" autoComplete="off"  size='sm' variant='filled' bgColor={Colors.mediumYellow} _hover={{bgColor:Colors.mediumYellow}} placeholder='Insert Ingredients...' value={ingredient} onChange={(e)=>setIngredient(e.target.value)} onClick={()=>setIngredientData("acorn squash")} borderRadius="5px"/>
+          <Button size='sm' bgColor={Colors.strongYellow} _hover={{bgColor:Colors.mediumYellow}} onClick={()=>handleAddingIngredients(ingredient)}>Add</Button>
           <ScaleFade in={ingredientData != ""} unmountOnExit={true} initialScale={0.9} style={{position:"absolute", top:"145px", zIndex:10}}>
             <Flex flexDir="column" bgColor="white" height="fit-content" maxHeight="220px" width="222px" overflowY="scroll" boxShadow="0px 3px 3px 0px rgba(0,0,0,0.1)" borderRadius="6px" borderWidth="1px" py="10px">
               {IngredientList.map((o:any,i:number)=>{
@@ -133,7 +134,7 @@ function Recipe() {
       </Flex>
 
       <Flex w="100%" justifyContent="center" paddingBottom="28">
-        <Box width="90%" maxWidth="800px">
+        <Box width="90%" maxWidth="1100px">
           {AisleList.aisle.map((o:string,i:number)=>(
             <Box key={i}>
               {ingredientArray.some((item:IngredientCard) => item?.aisle === o) && (
@@ -143,9 +144,9 @@ function Recipe() {
                     {ingredientArray.map((ingre: IngredientCard, index) => {
                       if(ingre?.aisle === o) {
                         return (
-                          <Flex key={index} gap="4" bg="white" width="fit-content" alignItems="center" borderRadius="25px" py="2" px="4" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)">
+                          <Flex key={index} gap="4" bg="white" width="fit-content" alignItems="center" borderRadius="10" py="2" px="4" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)">
                             <Text key={index} wordBreak="normal" textAlign="center" fontSize="sm" textTransform="capitalize">{ingre.ingredient_name}</Text>
-                            <CloseIcon cursor="pointer" boxSize={2} onClick={()=>handleDeleteIngredient(ingre.id)} />
+                            <CloseIcon cursor="pointer" boxSize={2} onClick={()=>handleDeleteIngredient(ingre.user_id, ingre.ingredient_id)} />
                           </Flex>
                         )
                       }

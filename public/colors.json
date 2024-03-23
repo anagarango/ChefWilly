@@ -1,5 +1,8 @@
 {
   "strongYellow":"#F2C14E",
   "mediumYellow":"#F3E2B8",
-  "lightYellow":"#F6F2E3"
+  "lightYellow":"#F6F2E3",
+  "strongOrange":"#F78154",
+  "mediumOrange":"#F8CEBF",
+  "lightOrange":"#F6EAE3"
 }

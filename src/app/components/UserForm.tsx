@@ -48,10 +48,8 @@ export default function LogIn({showModal, closeFeedback = () => {}, currentUserI
     }
   
     const messageData = await response.data;
-    console.log(messageData.message)
   
     if (messageData.message) {
-      console.log(messageData.message)
       sessionStorage.setItem("currentUser", JSON.stringify(messageData.message));
       currentUserId(messageData.message);
       setWarning(false);
@@ -71,7 +69,7 @@ export default function LogIn({showModal, closeFeedback = () => {}, currentUserI
     <>
       {showModal == "login" &&
         <Flex id="feedback" w="100vw" h="100vh" position="absolute" zIndex="10" top="0" bgColor="rgba(0,0,0,0.6)" justifyContent="center" alignItems="center">
-          <FormControl isInvalid={warning} onSubmit={(e) => submitForm(e)} w="75%" display="flex" bgColor="white" borderRadius="10" p="5" maxW="800px">
+          <FormControl isInvalid={warning} onSubmit={(e) => submitForm(e)} w="75%" display="flex" bgColor="white" borderRadius="10" p="5" maxW="1100px">
             <Box w="100%">
               <Heading>{formMode == "login" ? "Welcome Back!":"Join FictiChat!"}</Heading>
               <Text>Please enter your details</Text>

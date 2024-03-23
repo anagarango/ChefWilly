@@ -4,6 +4,8 @@ import { Button, Menu, MenuList, MenuButton, MenuOptionGroup, MenuItemOption } f
 import React from "react"
 import FilterData from "../../../public/filter.json"
 import { ChevronDownIcon } from '@chakra-ui/icons'
+import Colors from "../../../public/colors.json"
+
 
 interface Filter {
   [key: string]: {
@@ -18,7 +20,7 @@ export default function FilterCard({type="mealType", stateArray, handleSelected=
 
   return (
     <Menu>
-      <MenuButton size='sm' as={Button} rightIcon={<ChevronDownIcon />}>{Filter[type].title}</MenuButton>
+      <MenuButton size='sm' as={Button} backgroundColor={Colors.mediumOrange} rightIcon={<ChevronDownIcon />}>{Filter[type].title}</MenuButton>
       <MenuList height="245px" overflowY="scroll">
         <MenuOptionGroup type="checkbox">
           {Filter[type].list.map((o,i)=>(

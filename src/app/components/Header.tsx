@@ -15,7 +15,7 @@ interface SessionStorage {
   email:string
 }
 
-export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrentHomeTheme}:{currentUser:SessionStorage | string, setCurrentUserId:Function, setCurrentHomeTheme?:Function}){
+export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrentHomeTheme, color}:{currentUser:SessionStorage | string, setCurrentUserId:Function, setCurrentHomeTheme?:Function, color:object}){
   const r = useRouter()
   const p = usePathname()
 
@@ -101,16 +101,16 @@ export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrent
 
   return(
     <>
-    <Flex id="header" p="3" w="100%" maxW="800px" justifyContent="space-between">
+    <Flex id="header"py={3} w="100%" maxW="1100px" justifyContent="space-between">
       <Flex alignItems="center" gap="4">
-        <Image alt="fictichat logo" width={100} height={100} onClick={()=>handleCurrentPage("/")} style={{width:"150px", cursor:"pointer"}} src="/ChefWilly.svg"/>
-        <Text id="header-desktop" cursor="pointer" fontWeight="bold" color={currentPage == "/cookbook" ? "black" : "#989898"} onClick={()=>handleCurrentPage("/characters")}>Cookbook</Text>
-        <Text id="header-desktop" cursor="pointer" fontWeight="bold" color={currentPage == "/ingredients" ? "black" : "#989898"} onClick={()=>handleCurrentPage("/characters")}>Ingredients</Text>
+        <Image alt="fictichat logo" width={100} height={100} onClick={()=>handleCurrentPage("/")} style={{width:"125px", cursor:"pointer"}} src="/ChefWilly.svg"/>
+        <Text id="header-desktop" cursor="pointer" fontWeight="bold" color={currentPage == "/cookbook" ? "black" : "#989898"} onClick={()=>handleCurrentPage("/cookbook")}>Cookbook</Text>
+        <Text id="header-desktop" cursor="pointer" fontWeight="bold" color={currentPage == "/ingredients" ? "black" : "#989898"} onClick={()=>handleCurrentPage("/ingredients")}>Ingredients</Text>
       </Flex>
       
       <Flex id="header-desktop" className='flex gap-4 items-center'>
         {/* <Image alt={switchTheme || "icon"} onClick={()=>{toggleTheme()}} src={switchTheme == "light" ? "/dark.png" : "/light.png"} width={10} height={10} className="flex w-auto h-[25px] cursor-pointer"/> */}
-        <Button bg={Colors.lightYellow} color={Colors.strongYellow} _hover={{bgColor:"darkgreen"}} onClick={()=>{currentUser ? logOut() : setViewModal("login")}}>{currentUser ? "Sign Out": "Sign In"}</Button>
+        <Button bg={color.bg} color={color.text} _hover={{bgColor:"white"}} onClick={()=>{currentUser ? logOut() : setViewModal("login")}}>{currentUser ? "Sign Out": "Sign In"}</Button>
       </Flex>
 
       {/* <div id="header-mobile" className='flex gap-4 items-center'>

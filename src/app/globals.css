@@ -31,3 +31,9 @@ datalist#ingredient-list *{
 #checkbox label span.chakra-checkbox__control{
   border: 2px solid #F3C560 !important
 }
+
+@media screen and (max-width:800px) {
+  #homepage-image{
+    top:5vh !important
+  }
+}
