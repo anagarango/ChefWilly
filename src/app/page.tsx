@@ -6,6 +6,7 @@ import React, {useEffect, useState} from "react"
 import {useRouter} from "next/navigation"
 import FilterCard from "./components/Filter"
 import IngredientList from "../../public/ingredients.json"
+import Header from "./components/Header";
 
 
 interface RecipeCard {
@@ -17,11 +18,13 @@ interface RecipeCard {
 
 export default function Home() {
   const r = useRouter()
+  const [currentUser, setCurrentUser] = useState<any>();
   const [recipes, setRecipes] = useState<object[]>([]);
   const [missingHover, setMissingHover] = useState<string>("")
   const [ingredient, setIngredient] = useState<string>("")
   const [recipeResults, setRecipeResults] = useState<number>(20)
   const [ingredientData, setIngredientData] = useState("");
+  const [viewModal, setViewModal] = useState("");
 
   
   const [selectedMealTypes, setSelectedMealTypes] = useState<string[]>([]);
@@ -71,14 +74,18 @@ export default function Home() {
       const storedRecipes: object[] = JSON.parse(storedRecipesString);
       setRecipes(storedRecipes);
     }
+    if(sessionStorage.getItem("currentUser")){
+      setCurrentUser(JSON.parse(sessionStorage.getItem("currentUser")))
+      console.log(JSON.parse(sessionStorage.getItem("currentUser")))
+    }
   }, []);
 
 
   return (
     <main onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleIngredientDataShow((e.target as HTMLButtonElement).id)}>
-      <Box bg="#E7E2DF" px="20px" py="7px" >
-        <Heading as='h4' size='md' cursor="pointer">Chef Willy</Heading>
-      </Box>
+      <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:any) => setCurrentUser(e)}/>
+      <Text>{currentUser ?  `Hello ${currentUser.username}` : ""}</Text>
+      <Heading>{currentUser ?  "Ready to Roll Up Your Sleeves Again? Let's Plan Your Next Dish!" : "No More Guessing: Get Personalized Recipes Based on Your Ingredients"}</Heading>
       <Box p="0rem 3rem">
         <Box p="40px">
           <Box bg="white" p="4" borderRadius="25px" boxShadow="0px 5px 10px 0px rgba(0,0,0,0.3)">
