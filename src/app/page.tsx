@@ -48,7 +48,22 @@ export default function Home() {
     setRecipes(result.results);
     localStorage.setItem("relatedRecipes", JSON.stringify(result.results))
     setLoading(false)
-};
+  };
+
+  const handleGrabbingIngredients = async (user_id:number) => {
+    const response = await axios({
+      method: 'get',
+      url: `/api/ingredients?user_id=${user_id}`,
+    });
+    const result = await response.data
+    
+    const recipeArray = []
+    for(var x = 0; x < result.ingredients.length; x++){
+      recipeArray.push(result.ingredients[x].ingredient_name)
+    }
+    
+    setSelectedIngredients(recipeArray)
+  }
 
 
   const handleRecipeInformation = async (recipe:RecipeCard) => {
@@ -88,7 +103,9 @@ export default function Home() {
   useEffect(() => {
     const storedUser = sessionStorage.getItem("currentUser")
     if(storedUser){
-      setCurrentUser(JSON.parse(storedUser))
+      const storedUserInfo: any = JSON.parse(storedUser); 
+      setCurrentUser(storedUserInfo)
+      handleGrabbingIngredients(storedUserInfo.id)
     }
 
     const storedRecipesString = localStorage.getItem("relatedRecipes");
@@ -169,15 +186,15 @@ export default function Home() {
                   <FilterCard type="cuisines" stateArray={selectedCuisines} handleSelected={handleMenuSelect} settingState={setSelectedCuisines}/>
                   <FilterCard type="intolerances" stateArray={selectedIntolerances} handleSelected={handleMenuSelect} settingState={setSelectedIntolerances}/>
                 </Flex>
-                <Button size='sm' color="white" bgColor={Colors.strongOrange} _hover={{bgColor:Colors.mediumOrange, color:"black"}}  onClick={()=>handleRecipeSearch("NewRecipes")}>Search Recipes</Button>
+                <Button size='sm' color="white" bgColor={Colors.strongOrange} _hover={{bgColor:Colors.mediumOrange, color:"black"}}  onClick={()=>handleRecipeSearch("NewRecipes")}>{loading ? <Spinner boxSize={3}/> : "Search Recipes"}</Button>
               </Flex>
             </Box>
 
             {selectedIngredients.length > 0 && <>
               <hr style={{margin:"25px 0", border:`1px solid ${Colors.strongOrange}`}}/>
-              <Flex gap="2">
+              <Flex gap="2" flexWrap="wrap">
                 {selectedIngredients.map((o,i)=>(
-                  <Flex borderRadius='10px' border={`1px solid ${Colors.strongOrange}`} alignItems="center" gap={1} padding="3px 10px">
+                  <Flex key={i} borderRadius='10px' border={`1px solid ${Colors.strongOrange}`} alignItems="center" gap={1} padding="3px 10px">
                     <Text color={Colors.strongOrange}>{o}</Text>
                     <CloseIcon color={Colors.strongOrange} cursor="pointer" boxSize="6" p={2} onClick={()=>setSelectedIngredients(selectedIngredients.filter(item => item !== o))} />
                   </Flex>
@@ -186,8 +203,9 @@ export default function Home() {
             </>}
           </Flex>
 
-          <Flex marginTop={10} flexWrap="wrap" gap="4" justifyContent="space-between">
-            {recipes && recipes.map((o:any,i:number)=>(
+          <Flex marginTop={10} flexWrap="wrap" gap="4" justifyContent={loading ? "center" : "space-between"}>
+            {loading && <Spinner color={Colors.strongOrange} boxSize={28} />}
+            {(recipes && !loading) && recipes.map((o:any,i:number)=>(
               <Flex  position="relative" onMouseOver={()=>setMissingHover(o.title)} onMouseOut={()=>setMissingHover("")} bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={i} onClick={()=>handleRecipeInformation(o)} marginTop="50px" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)" cursor="pointer">
                 <Image src={o.image} alt={o.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
                 <Text wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{o.title}</Text>

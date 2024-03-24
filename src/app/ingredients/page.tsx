@@ -133,7 +133,7 @@ function Recipe() {
         </Flex>
       </Flex>
 
-      <Flex w="100%" justifyContent="center" paddingBottom="28">
+      <Flex w="100%" justifyContent="center" paddingBottom={14}>
         <Box width="90%" maxWidth="1100px">
           {AisleList.aisle.map((o:string,i:number)=>(
             <Box key={i}>

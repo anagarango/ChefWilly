@@ -18,6 +18,7 @@ main {
 
 a {
   color: #F78154 !important;
+  font-weight: 600 !important;
 }
 
 datalist#ingredient-list *{
@@ -31,8 +32,6 @@ datalist#ingredient-list *{
 #checkbox label span.chakra-checkbox__control{
   border: 2px solid #F78154 !important
 }
-
-
 
 @media screen and (max-width:800px) {
   #homepage-image{

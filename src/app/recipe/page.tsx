@@ -98,11 +98,12 @@ function Recipe() {
   },[])
 
   return (
-    <main>
-      <Flex flexDir="column" alignItems="center" backgroundImage="url('/OrangeSquiggle.svg')" backgroundSize="clamp(100px, 60%, 1100px) auto" backgroundPosition="100% 0%" backgroundRepeat="no-repeat" width="100vw" height="60vw" px="6">
-      <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:any) => setCurrentUser(e)} color={{"bg":Colors.lightOrange, text:Colors.strongOrange}}/>
-      <Flex justifyContent="center" width="100%" paddingTop={10}>
-        <Flex flexDir="column" p="10px" width="100%" maxW="1000px"  border={`2px solid ${Colors.mediumOrange}`}>
+    <main style={{backgroundColor:Colors.lightOrange}}>
+      <Flex flexDir="column" alignItems="center" backgroundImage="url('/OrangeSquiggle.svg')" backgroundSize="clamp(100px, 60%, 1100px) auto" backgroundPosition="100% 0%" backgroundRepeat="no-repeat" width="100vw" height="56vw" px="6">
+        <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:any) => setCurrentUser(e)} color={{"bg":Colors.lightOrange, text:Colors.strongOrange}}/>
+      </Flex>
+      <Flex position="absolute" top="125px" justifyContent="center" width="100%" paddingX={7}>
+        <Flex flexDir="column" p="10px" marginBottom={14} width="100%" maxW="1000px"  border={`2px solid ${Colors.mediumOrange}`}>
           <Flex flexDir="column" p="40px" bg={Colors.mediumOrange}>
           <Flex>
             <Box width="50%" paddingRight={5}>
@@ -130,18 +131,18 @@ function Recipe() {
           <Box>
             <SkeletonText startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1}  mt='4' noOfLines={7} spacing='4' skeletonHeight='2' />
             <Text dangerouslySetInnerHTML={{ __html: chosenRecipe.summary }} paddingY="25px"></Text>
-            <Heading as='h4' size='md' paddingBottom="5px">Equipment:</Heading>
+            <Heading as='h4' size='md'>Equipment:</Heading>
             <SkeletonText w={12} startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1}  mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />
-            <Flex id="checkbox" flexDirection="column" paddingBottom="20px">
+            <Flex id="checkbox" flexDirection="column" paddingBottom="25px" marginTop={-3}>
               {equipment && equipment.map((o:any,i:number)=>(
                 <Checkbox key={i} _checked={{ textDecoration: "line-through", color: Colors.strongOrange}} colorScheme='orange' style={{transitionDuration:"0.3s"}}>{o.name}</Checkbox>
               ))}
             </Flex>
-            <Heading as='h4' size='md' paddingBottom="5px">Ingredients:</Heading>
+            <Heading as='h4' size='md'>Ingredients:</Heading>
             <SkeletonText w={12} startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1}  mt='4' noOfLines={7} spacing='4' skeletonHeight='2' />
-            <Flex id="checkbox" flexDirection="column" paddingBottom="20px">
+            <Flex id="checkbox" flexDirection="column" paddingBottom="25px" marginTop={-3}>
               {chosenRecipe.extendedIngredients && chosenRecipe.extendedIngredients.map((o:any,i:number)=>(
-                <Checkbox key={i} _checked={{ textDecoration: "line-through", color: Colors.strongOrange}} colorScheme='orange' style={{transitionDuration:"0.3s"}}>{o.measures.metric.amount.toFixed(2)} {o.measures.metric.unitShort} {o.name}</Checkbox>
+                <Checkbox key={i} _checked={{ textDecoration: "line-through", color: Colors.strongOrange}} colorScheme='orange' style={{transitionDuration:"0.3s"}}>{o.measures.metric.amount} {o.measures.metric.unitShort} {o.name}</Checkbox>
               ))}
             </Flex>
             <Heading as='h4' size='md' paddingBottom="5px">Instructions:</Heading>
@@ -184,7 +185,6 @@ function Recipe() {
             </>}
           </Flex>
         </Flex>
-      </Flex>
       </Flex>
     </main>
   );
