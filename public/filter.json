@@ -7,10 +7,15 @@
       "dessert",
       "appetizer",
       "salad",
+      "bread",
       "breakfast",
       "soup",
+      "beverage",
+      "sauce",
+      "marinade",
       "fingerfood",
-      "snack"
+      "snack",
+      "drink"
     ]
   },
   "cuisines":{

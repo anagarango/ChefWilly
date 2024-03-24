@@ -119,15 +119,15 @@ export default function Home() {
         <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:any) => setCurrentUser(e)} color={{"bg":Colors.lightOrange, text:Colors.strongOrange}}/>
         <Flex position="relative" width="100%" height="100%" maxW="1100px" >
           <Flex id="homepage-image"  position="absolute" top="25%" left="0" flexDir="column" w="clamp(100px, 50%, 900px)" justifyContent="center" paddingLeft={5}>
-            <Text>{currentUser ?  `Welcome Back ${currentUser.username}` : ""}</Text>
-            <Heading as='h3' size='lg' color={Colors.strongOrange}>{currentUser ?  "Ready to Roll Up Your Sleeves Again? Let's Plan Your Next Dish!" : "No More Guessing: Get Personalized Recipes Based on Your Ingredients"}</Heading>
+            <Text fontSize="lg">{currentUser ?  `Welcome Back, ${currentUser.username}` : ""}</Text>
+            <Heading as='h3' size='lg' fontWeight="black" color={Colors.strongOrange}>{currentUser ?  "Ready to Roll Up Your Sleeves Again? Let's Plan Your Next Dish!" : "No More Guessing: Get Personalized Recipes Based on Your Ingredients"}</Heading>
           </Flex>
         </Flex>
       </Flex>
       <Flex justifyContent="center">
         <Box width="100%" maxW="1100px" p="40px">
           <Heading as='h4' size='md' paddingBottom="5px">Popular Recipes</Heading>
-          <Flex width="100%" overflowX="scroll" height="250px" gap="5" paddingX="20px" alignItems="center">
+          <Flex width="100%" overflowX="scroll" height="275px" gap="5" paddingX="20px" alignItems="center">
             {PopularRecipes.results.map((o:any,i:number)=> (
               <Flex id="what" position="relative" onMouseOver={()=>setMissingHover(o.title)} onMouseOut={()=>setMissingHover("")} bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={i} onClick={()=>handleRecipeInformation(o)} marginTop="50px" boxShadow="0px 5px 10px 0px rgba(0,0,0,0.3)" cursor="pointer">
                 <Image src={o.image} alt={o.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
@@ -148,8 +148,8 @@ export default function Home() {
           <hr style={{margin:"75px 0", border:`1px solid ${Colors.strongOrange}`}}/>
 
           <Flex flexDirection="column" bg="white" p="4" borderRadius="25px" boxShadow="0px 5px 10px 0px rgba(0,0,0,0.3)">
-            <Flex id="input-filters" width="100%" justifyContent="space-between">
-              <Flex id="input-ingredient" gap="3" position="relative">
+            <Box width="100%">
+              <Flex marginBottom={5} gap="3" position="relative">
                 <Input id="ingredient-selection" autoComplete="off" size='sm' variant='filled' bgColor={Colors.mediumOrange} placeholder='Insert Ingredients...' value={ingredient} onChange={(e)=>setIngredient(e.target.value)} onClick={()=>setIngredientData("acorn squash")} borderRadius="5px"/>
                 <ScaleFade in={ingredientData != ""} unmountOnExit={true} initialScale={0.9} style={{position:"absolute", top:"40px", zIndex:10}}>
                   <Flex flexDir="column" bgColor="white" height="fit-content" maxHeight="220px" width="222px" overflowY="scroll" boxShadow="0px 3px 3px 0px rgba(0,0,0,0.1)" borderRadius="6px" borderWidth="1px" py="10px">
@@ -163,13 +163,15 @@ export default function Home() {
                 </ScaleFade>
                 <Button size='sm' color="white" bgColor={Colors.strongOrange} _hover={{bgColor:Colors.mediumOrange, color:"black"}} onClick={()=>handleAddingIngredients(ingredient)}>Add</Button>
               </Flex>
-              <Flex gap="3">
-                <FilterCard type="mealType" stateArray={selectedMealTypes} handleSelected={handleMenuSelect} settingState={setSelectedMealTypes}/>
-                <FilterCard type="cuisines" stateArray={selectedCuisines} handleSelected={handleMenuSelect} settingState={setSelectedCuisines}/>
-                <FilterCard type="intolerances" stateArray={selectedIntolerances} handleSelected={handleMenuSelect} settingState={setSelectedIntolerances}/>
+              <Flex gap="7" justifyContent="space-between">
+                <Flex gap="3">
+                  <FilterCard type="mealType" stateArray={selectedMealTypes} handleSelected={handleMenuSelect} settingState={setSelectedMealTypes}/>
+                  <FilterCard type="cuisines" stateArray={selectedCuisines} handleSelected={handleMenuSelect} settingState={setSelectedCuisines}/>
+                  <FilterCard type="intolerances" stateArray={selectedIntolerances} handleSelected={handleMenuSelect} settingState={setSelectedIntolerances}/>
+                </Flex>
                 <Button size='sm' color="white" bgColor={Colors.strongOrange} _hover={{bgColor:Colors.mediumOrange, color:"black"}}  onClick={()=>handleRecipeSearch("NewRecipes")}>Search Recipes</Button>
               </Flex>
-            </Flex>
+            </Box>
 
             {selectedIngredients.length > 0 && <>
               <hr style={{margin:"25px 0", border:`1px solid ${Colors.strongOrange}`}}/>

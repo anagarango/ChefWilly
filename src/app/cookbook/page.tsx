@@ -51,26 +51,6 @@ function CookBook() {
     setCookbookArray(result.ingredients)
   }
 
-  const handleAddingIngredients = async (ing?:any) => {
-    const grabIngredientAPI = await axios.get(`https://api.spoonacular.com/food/ingredients/search?apiKey=${process.env.NEXT_PUBLIC_API_KEY}&query=${ing}&number=1&metaInformation=true`)
-    const grabIngredientAPIResult = await grabIngredientAPI.data
-    
-    const response = await axios({
-      method: 'post',
-      url: "/api/ingredients",
-      data: {
-        user_id: currentUser.id,
-        ingredient: grabIngredientAPIResult.results
-      }
-    });
-    const result = await response.data
-    if(result.message){
-      setToastMessage(result.message)
-      setCookbookArray((prev) => [...prev, result.ingredient])
-    } else {
-      setToastMessage(result.error)
-    }
-  }
   const handleRecipeInformation = async (recipe:RecipeCard, e:any) => {
     const recipeArray = []
     for(var x = 0; x < cookbookArray.length; x++){
@@ -130,26 +110,26 @@ function CookBook() {
         </Flex>
       </Flex>
       <Flex w="100%" justifyContent="center" paddingBottom="28">
-      <Flex flexWrap="wrap" gap={5} width="100%" maxW="1100px" p={6}>
-        {cookbookArray.map((ingre: IngredientCard, index) => {
-          const recipeInfo = JSON.parse(ingre.recipe_information)
-            if(ingredient == null || recipeInfo.title.toLowerCase().includes(ingredient.toLowerCase()))
-            return (
-                    <Flex id="what" position="relative" bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={index} onMouseOver={()=>setDeleteHover(recipeInfo.title)} onMouseOut={()=>setDeleteHover("")}  marginTop="50px" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)">
-                      <Image src={recipeInfo.image} alt={recipeInfo.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
-                      <Text wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{recipeInfo.title}</Text>
-                      {deleteHover == recipeInfo.title && 
-                        <Flex position="absolute" bg="rgba(255,255,250,0.9)" flexDirection="column" width="170px" height="180px" top="0" borderRadius="25px" p="35px" justifyContent="space-between" alignItems="center">
-                          <CloseIcon cursor="pointer" boxSize={5} color={Colors.strongRed} onClick={(e:any) => handleDeleteCookbook(ingre.user_id, ingre.recipe_id, e)} />
-                          <ViewIcon cursor="pointer" boxSize={7} color={Colors.strongRed} onClick={(e:any)=>handleRecipeInformation(recipeInfo, e)} />
-                        </Flex>
-                      }
-                    </Flex>
-                  )
-            
-            return null;
-          })}
-      </Flex>
+        <Flex flexWrap="wrap" gap={5} width="100%" maxW="1100px" p={6}>
+          {cookbookArray.map((ingre: IngredientCard, index) => {
+            const recipeInfo = JSON.parse(ingre.recipe_information)
+              if(ingredient == null || recipeInfo.title.toLowerCase().includes(ingredient.toLowerCase()))
+              return (
+                      <Flex id="what" position="relative" bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={index} onMouseOver={()=>setDeleteHover(recipeInfo.title)} onMouseOut={()=>setDeleteHover("")}  marginTop="50px" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)">
+                        <Image src={recipeInfo.image} alt={recipeInfo.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
+                        <Text wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{recipeInfo.title}</Text>
+                        {deleteHover == recipeInfo.title && 
+                          <Flex position="absolute" bg="rgba(255,255,250,0.9)" flexDirection="column" width="170px" height="180px" top="0" borderRadius="25px" p="35px" justifyContent="space-between" alignItems="center">
+                            <ViewIcon cursor="pointer" boxSize={7} color={Colors.strongRed} onClick={(e:any)=>handleRecipeInformation(recipeInfo, e)} />
+                            <CloseIcon cursor="pointer" boxSize={5} color={Colors.strongRed} onClick={(e:any) => handleDeleteCookbook(ingre.user_id, ingre.recipe_id, e)} />
+                          </Flex>
+                        }
+                      </Flex>
+                    )
+              
+              return null;
+            })}
+        </Flex>
       </Flex>
 
       {/* <Flex w="100%" justifyContent="center" paddingBottom="28">

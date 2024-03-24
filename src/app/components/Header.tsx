@@ -109,8 +109,10 @@ export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrent
     <Flex id="header"py={3} w="100%" maxW="1100px" justifyContent="space-between">
       <Flex alignItems="center" gap="4">
         <Image alt="fictichat logo" width={100} height={100} onClick={()=>handleCurrentPage("/")} style={{width:"125px", cursor:"pointer"}} src="/ChefWilly.svg"/>
-        <Text id="header-desktop" cursor="pointer" fontWeight="bold" color={currentPage == "/cookbook" ? "black" : "#989898"} onClick={()=>handleCurrentPage("/cookbook")}>Cookbook</Text>
-        <Text id="header-desktop" cursor="pointer" fontWeight="bold" color={currentPage == "/ingredients" ? "black" : "#989898"} onClick={()=>handleCurrentPage("/ingredients")}>Ingredients</Text>
+        {currentUser && <>
+          <Text id="header-desktop" cursor="pointer" fontWeight="bold" color={currentPage == "/cookbook" ? "black" : "#989898"} onClick={()=>handleCurrentPage("/cookbook")}>Cookbook</Text>
+          <Text id="header-desktop" cursor="pointer" fontWeight="bold" color={currentPage == "/ingredients" ? "black" : "#989898"} onClick={()=>handleCurrentPage("/ingredients")}>Ingredients</Text>
+        </>}
       </Flex>
       
       <Flex id="header-desktop" className='flex gap-4 items-center'>

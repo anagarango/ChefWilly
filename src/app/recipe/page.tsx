@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { Button, Box, Flex, Checkbox, Heading, Text } from '@chakra-ui/react'
+import { Box, Flex, Checkbox, Heading, Text, Skeleton, SkeletonCircle, SkeletonText  } from '@chakra-ui/react'
 import axios from "axios";
 import Colors from "../../../public/colors.json"
 import React, {useEffect, useState, Suspense} from "react"
@@ -16,6 +16,13 @@ interface RecipeCard {
   imageType: string
 }
 
+interface CookbookDatabaseInfo {
+  id: number,
+  user_id: number,
+  recipe_id: number,
+  recipe_information: string,
+}
+
 function Recipe() {
   const r = useRouter()
   const searchParams = useSearchParams()
@@ -27,16 +34,29 @@ function Recipe() {
   const [equipment, setEquipment] = useState<any>()
   const [diet, setDiet] = useState<any>()
   const [missingHover, setMissingHover] = useState<string>("")
+  const [cookbookSaved, setCookbookSaved] = useState<CookbookDatabaseInfo | undefined>()
+  const [isLoaded, setIsLoaded] = useState<boolean>(false)
 
-  const handleGrabbingRecipeInformation = async () => {
+  const handleGrabbingRecipeInformation = async (user_id:number) => {
+    setIsLoaded(false)
     const response = await axios.get(`https://api.spoonacular.com/recipes/${search}/information?apiKey=${process.env.NEXT_PUBLIC_API_KEY}`)
     const equipmentResponse = await axios.get(`https://api.spoonacular.com/recipes/${search}/equipmentWidget.json?apiKey=${process.env.NEXT_PUBLIC_API_KEY}`)
     const result = await response.data
     const equipmentResult = await equipmentResponse.data
+
+    const cookbookResponse = await axios({
+      method: 'get',
+      url: `/api/cookbook/${user_id}?recipe_id=${search}`,
+    });
+    const cookbookResult = await cookbookResponse.data.cookbook
+    setCookbookSaved(cookbookResult)
+    
     setChosenRecipe(result)
     setEquipment(equipmentResult.equipment)
-    setDiet([{result: result.dairyFree, name: "dairy-free"}, {result: result.glutenFree, name: "gluten-free"}, {result: result.vegan, name: "vegan"}, {result: result.vegetarian, name: "vegetarian"}, {result: result.veryHealthy, name: "very-healthy"}, {result: result.veryPopular, name: "very-popular"}])
+    setDiet([{result: result.dairyFree, name: "dairy-free"}, {result: result.glutenFree, name: "gluten-free"}, {result: result.vegan, name: "vegan"}, {result: result.vegetarian, name: "vegetarian"}, {result: result.veryHealthy, name: "healthy"}, {result: result.veryPopular, name: "very-popular"}])
+    setIsLoaded(true)
   }
+
 
   const handleRecipeInformation = async (recipe:RecipeCard) => {
     r.push(`/recipe?title=${recipe.title}&id=${recipe.id}`)
@@ -44,7 +64,6 @@ function Recipe() {
   }
 
   const handleAddingCookbook  = async (recipe:RecipeCard) => {
-    console.log(recipe)
     const apiResponse = await axios({
       method: 'post',
       url: "/api/cookbook",
@@ -54,11 +73,18 @@ function Recipe() {
       }
     });
     const result = await apiResponse.data
-    console.log(result)
   }
 
   useEffect(()=>{
-    handleGrabbingRecipeInformation()
+    const storedUser = sessionStorage.getItem("currentUser")
+
+    if(storedUser){
+      const parsedUser = JSON.parse(storedUser)
+      setCurrentUser(parsedUser)
+      handleGrabbingRecipeInformation(parsedUser.id)
+    }
+
+    
 
     const storedRecipesString = localStorage.getItem("relatedRecipes");
     const storedCookbookString = localStorage.getItem("cookbookRecipes");
@@ -68,12 +94,6 @@ function Recipe() {
     } else if (storedRecipesString) {
       const storedRecipes: object[] = JSON.parse(storedRecipesString);
       setRelatedRecipes(storedRecipes);
-    }
-
-    const storedUser = sessionStorage.getItem("currentUser")
-
-    if(storedUser){
-      setCurrentUser(JSON.parse(storedUser))
     }
   },[])
 
@@ -85,11 +105,11 @@ function Recipe() {
         <Flex flexDir="column" p="10px" width="100%" maxW="1000px"  border={`2px solid ${Colors.mediumOrange}`}>
           <Flex flexDir="column" p="40px" bg={Colors.mediumOrange}>
           <Flex>
-            <Box width="50%">
-              <Heading as='h2' size='xl' paddingBottom="10px">{chosenRecipe.title}</Heading>
-              <Heading as='h5' size='sm'>Ratings: <span>{Math.floor(chosenRecipe.spoonacularScore)}/100</span></Heading>
-              <Heading as='h5' size='sm'>Total Time: {chosenRecipe.readyInMinutes} minutes</Heading>
-              <Heading as='h5' size='sm'>Servings: {chosenRecipe.servings}</Heading>
+            <Box width="50%" paddingRight={5}>
+              <SkeletonText as='h2' fontSize='3xl' fontWeight="bold" startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1} noOfLines={1} skeletonHeight='5' paddingBottom="10px">{chosenRecipe.title}</SkeletonText>
+              <SkeletonText as='h5' fontWeight="medium" startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1} noOfLines={1} spacing='4' skeletonHeight='2' height='20px' >Ratings: <span>{Math.floor(chosenRecipe.spoonacularScore)}/100</span></SkeletonText>
+              <SkeletonText as='h5' fontWeight="medium" startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1} noOfLines={1} spacing='4' skeletonHeight='2' height='20px' >Total Time: {chosenRecipe.readyInMinutes} minutes</SkeletonText>
+              <SkeletonText as='h5' fontWeight="medium" startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1} noOfLines={1} spacing='4' skeletonHeight='2' height='20px' >Servings: {chosenRecipe.servings}</SkeletonText>
               <Flex flexWrap="wrap" gap="4" paddingY="20px">
                 {diet && diet.map((o:any,i: number) => {
                   if(o.result){
@@ -103,29 +123,35 @@ function Recipe() {
                 })}
               </Flex>
             </Box>
-            <Image src={chosenRecipe.image} alt={chosenRecipe.title} width={200} height={200} style={{width:"50%", height:"fit-content"}}/>
+            <Skeleton startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1}  height="100%" width="50%" >
+              <Image src={chosenRecipe.image} alt={chosenRecipe.title} width={200} height={200} style={{width:"100%", height:"fit-content"}}/>
+            </Skeleton>
           </Flex>
           <Box>
+            <SkeletonText startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1}  mt='4' noOfLines={7} spacing='4' skeletonHeight='2' />
             <Text dangerouslySetInnerHTML={{ __html: chosenRecipe.summary }} paddingY="25px"></Text>
             <Heading as='h4' size='md' paddingBottom="5px">Equipment:</Heading>
+            <SkeletonText w={12} startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1}  mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />
             <Flex id="checkbox" flexDirection="column" paddingBottom="20px">
               {equipment && equipment.map((o:any,i:number)=>(
                 <Checkbox key={i} _checked={{ textDecoration: "line-through", color: Colors.strongOrange}} colorScheme='orange' style={{transitionDuration:"0.3s"}}>{o.name}</Checkbox>
               ))}
             </Flex>
             <Heading as='h4' size='md' paddingBottom="5px">Ingredients:</Heading>
+            <SkeletonText w={12} startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1}  mt='4' noOfLines={7} spacing='4' skeletonHeight='2' />
             <Flex id="checkbox" flexDirection="column" paddingBottom="20px">
               {chosenRecipe.extendedIngredients && chosenRecipe.extendedIngredients.map((o:any,i:number)=>(
                 <Checkbox key={i} _checked={{ textDecoration: "line-through", color: Colors.strongOrange}} colorScheme='orange' style={{transitionDuration:"0.3s"}}>{o.measures.metric.amount.toFixed(2)} {o.measures.metric.unitShort} {o.name}</Checkbox>
               ))}
             </Flex>
             <Heading as='h4' size='md' paddingBottom="5px">Instructions:</Heading>
+            <SkeletonText w={12} startColor={Colors.strongOrange} endColor={Colors.strongOrange} isLoaded={isLoaded} fadeDuration={1}  mt='4' noOfLines={10} spacing='4' skeletonHeight='2' />
             <ol style={{padding:"0 0 0 35px"}}>
               {chosenRecipe.analyzedInstructions?.length > 0 && chosenRecipe.analyzedInstructions[0].steps.map((o:any,i:number)=>(
                 <li key={i} style={{transitionDuration:"0.3s"}}>{o.step}</li>
               ))}
             </ol>
-            <Box fontWeight="bold" borderRadius="10" width="100%" backgroundColor={Colors.strongOrange} color="white" _hover={{backgroundColor:Colors.strongOrange}} padding="10px 0" textAlign='center' marginTop="20px" cursor="pointer" onClick={()=>handleAddingCookbook(chosenRecipe)}>Add to Cookbook</Box>
+            <Box fontWeight="bold" borderRadius="10" width="100%" backgroundColor={cookbookSaved ? "gray" : Colors.strongOrange} color={cookbookSaved ? "lightgray" : "white" } _hover={{backgroundColor:cookbookSaved ? "gray" :Colors.strongOrange}} padding="10px 0" textAlign='center' marginTop="20px" cursor={cookbookSaved ? "not-allowed" : "pointer"} onClick={()=>{cookbookSaved ? console.log("Nope") : handleAddingCookbook(chosenRecipe)}}>{cookbookSaved ? "Already Saved to Cookbook" : "Add to Cookbook"}</Box>
           </Box>
           {relatedRecipes.length > 1 && 
             <>

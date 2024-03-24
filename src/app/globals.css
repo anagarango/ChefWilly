@@ -32,14 +32,7 @@ datalist#ingredient-list *{
   border: 2px solid #F78154 !important
 }
 
-@media screen and (max-width:1000px) {
-  #input-filters{
-    flex-direction: column !important;
-  }
-  #input-ingredient{
-    margin-bottom: 20px;
-  }
-}
+
 
 @media screen and (max-width:800px) {
   #homepage-image{

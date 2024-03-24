@@ -1,0 +1,19 @@
+import connection from "../../mysql"
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
+  try {
+    const user_id = params.id
+    
+    const searchParams = request.nextUrl.searchParams;
+    const recipe_id = searchParams.get("recipe_id")
+    console.log(user_id, recipe_id)
+    const connectionInstance = await connection;
+    const [rows]:any = await connectionInstance.query("SELECT * FROM cookbook WHERE user_id = ? AND recipe_id = ?", [user_id, recipe_id]);
+
+    return NextResponse.json({"cookbook": rows[0]});
+
+  } catch (error:any) {
+    return NextResponse.json({ message: error.message }, {status: 500,});
+  }
+}
