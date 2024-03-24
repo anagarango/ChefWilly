@@ -15,7 +15,12 @@ interface SessionStorage {
   email:string
 }
 
-export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrentHomeTheme, color}:{currentUser:SessionStorage | string, setCurrentUserId:Function, setCurrentHomeTheme?:Function, color:object}){
+interface ColorHeader {
+  bg: string,
+  text: string
+}
+
+export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrentHomeTheme, color}:{currentUser:SessionStorage | string, setCurrentUserId:Function, setCurrentHomeTheme?:Function, color:ColorHeader}){
   const r = useRouter()
   const p = usePathname()
 

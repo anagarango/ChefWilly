@@ -4,5 +4,8 @@
   "lightYellow":"#F6F2E3",
   "strongOrange":"#F78154",
   "mediumOrange":"#F8CEBF",
-  "lightOrange":"#F6EAE3"
+  "lightOrange":"#F6EAE3",
+  "strongRed":"#E76262",
+  "mediumRed":"#F1A1A1",
+  "lightRed":"#F8E4E4"
 }

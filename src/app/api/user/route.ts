@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const email = searchParams.get("email")
     const password = searchParams.get("password")
     const connectionInstance = await connection;
-    const [rows] = await connectionInstance.query("SELECT * FROM user WHERE email = ? AND password = ?", [email, password]);
+    const [rows] : any[] = await connectionInstance.query("SELECT * FROM user WHERE email = ? AND password = ?", [email, password]);
     if (rows[0]) {
       return NextResponse.json({message: rows[0]});
     }
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
   try {
     const { username, email, password } = await request.json();
     const connectionInstance = await connection;
-    const [rows] = await connectionInstance.query("SELECT * FROM user WHERE email = ?", [email]);
+    const [rows] : any[] = await connectionInstance.query("SELECT * FROM user WHERE email = ?", [email]);
     if (rows[0]) {
       return NextResponse.json({error: "Email already in use"});
     }

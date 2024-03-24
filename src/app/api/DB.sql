@@ -25,7 +25,7 @@ CREATE TABLE cookbook (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
   recipe_id INT,
-  recipe_information LONGTEXT,
+  recipe_information TEXT,
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 

@@ -17,7 +17,7 @@ main {
 }
 
 a {
-  color: #D69E2E !important;
+  color: #F78154 !important;
 }
 
 datalist#ingredient-list *{
@@ -29,7 +29,16 @@ datalist#ingredient-list *{
 }
 
 #checkbox label span.chakra-checkbox__control{
-  border: 2px solid #F3C560 !important
+  border: 2px solid #F78154 !important
+}
+
+@media screen and (max-width:1000px) {
+  #input-filters{
+    flex-direction: column !important;
+  }
+  #input-ingredient{
+    margin-bottom: 20px;
+  }
 }
 
 @media screen and (max-width:800px) {
