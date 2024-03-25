@@ -86,12 +86,12 @@ export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrent
   // }
 
   const logOut = () => {
+    localStorage.removeItem("relatedRecipes")
+    localStorage.removeItem("cookbookRecipes")
     sessionStorage.removeItem("currentUser")
-    if(p == "/chat"){
+    
       r.push("/")
-    } else {
       window.location.reload();
-    }
   }
 
   const GrabAllUsersChats = async (e:SessionStorage) =>{

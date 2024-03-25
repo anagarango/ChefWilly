@@ -7,7 +7,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
     
     const searchParams = request.nextUrl.searchParams;
     const recipe_id = searchParams.get("recipe_id")
-    console.log(user_id, recipe_id)
     const connectionInstance = await connection;
     const [rows]:any = await connectionInstance.query("SELECT * FROM cookbook WHERE user_id = ? AND recipe_id = ?", [user_id, recipe_id]);
 

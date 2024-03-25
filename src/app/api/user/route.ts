@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
+    
     const searchParams = request.nextUrl.searchParams;
     const email = searchParams.get("email")
     const password = searchParams.get("password")
@@ -26,11 +27,12 @@ export async function POST(request: NextRequest) {
     if (rows[0]) {
       return NextResponse.json({error: "Email already in use"});
     }
-    const result = await connectionInstance.query("INSERT INTO user VALUES ?", { username, email, password });
+    const result = await connectionInstance.query("INSERT INTO user (username, email, password) VALUES (?, ?, ?)",[username, email, password]);
+    const [user] : any[] = await connectionInstance.query("SELECT * FROM user WHERE email = ?", [email]);
 
-    return NextResponse.json({ message: "Successfully created account!"});
+    return NextResponse.json({ message: user[0]});
 
   } catch (error:any) {
-    return NextResponse.json({ message: error.message }, {status: 500,});
+    return NextResponse.json({ message: error.message }, {status: 500});
   }
 }

@@ -1,7 +1,7 @@
 import { useState, useRef, use } from "react";
 import Image from "next/image";
 import axios from "axios";
-import { Flex, FormControl, Box, Heading, Text, Button, Input } from "@chakra-ui/react";
+import { Flex, FormControl, Box, Heading, Text, Button, Input, Spinner } from "@chakra-ui/react";
 import Colors from "../../../public/colors.json"
 
 export default function LogIn({showModal, closeFeedback = () => {}, currentUserId = () => {} }: { showModal: string; closeFeedback?: Function, currentUserId?: Function }){
@@ -34,7 +34,7 @@ export default function LogIn({showModal, closeFeedback = () => {}, currentUserI
     } else {
       response = await axios({
         method: 'post',
-        url: "/api/mysql/user",
+        url: "/api/user",
         data: {
           username: username,
           email: email,
@@ -78,7 +78,7 @@ export default function LogIn({showModal, closeFeedback = () => {}, currentUserI
               <Input fontSize="sm" type="password" placeholder="Password:" bgColor={Colors.mediumOrange} p="2" w="100%" borderRadius="10" marginY="1" required ref={passwordRef}></Input>
               <Text className={`text-red-600 pt-3 ${warning ? "visible" : "invisible"}`}>{warning}</Text>
               <Flex justifyContent="flex-end" gap="3" paddingTop="5">
-                <Button onClick={(e:any)=>submitForm(e)} type="submit" disabled={idleEmail} bgColor={Colors.strongOrange} color="white" p="2">{idleEmail ? <Image alt="loading gif" src="/spinner.svg" width={70} height={70} className="w-[50px] h-5" /> : "Submit"}</Button>
+                <Button onClick={(e:any)=>submitForm(e)} type="submit" disabled={idleEmail} bgColor={Colors.strongOrange} color="white" p="2">{idleEmail ? <Spinner />: "Submit"}</Button>
                 <Button onClick={() => {closeFeedback(false); setWarning(false)}} color={Colors.strongOrange} bgColor="lightgray" p="2">Cancel</Button>
               </Flex>
             </Box>

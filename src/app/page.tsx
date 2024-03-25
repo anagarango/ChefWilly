@@ -103,7 +103,7 @@ export default function Home() {
   useEffect(() => {
     const storedUser = sessionStorage.getItem("currentUser")
     if(storedUser){
-      const storedUserInfo: any = JSON.parse(storedUser); 
+      const storedUserInfo: any = JSON.parse(storedUser);
       setCurrentUser(storedUserInfo)
       handleGrabbingIngredients(storedUserInfo.id)
     }
