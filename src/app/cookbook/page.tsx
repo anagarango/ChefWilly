@@ -53,7 +53,7 @@ function CookBookPage() {
     setCookbookArray(result.rows[0])
   }
 
-  const handleRecipeInformation = async (recipe:RecipeInfo, e:any) => {
+  const handleRecipeInformation = async (recipe:RecipeInfo) => {
     const recipeArray = []
     for(var x = 0; x < cookbookArray.length; x++){
       recipeArray.push(JSON.parse(cookbookArray[x].recipe_information))
@@ -63,8 +63,7 @@ function CookBookPage() {
   }
 
   
-  const handleDeleteCookbook = async (user_id:number, recipe_id:number, e:any) => {
-    e.stopPropagation();
+  const handleDeleteCookbook = async (user_id:number, recipe_id:number) => {
     const response = await axios({
       method: 'delete',
       url: `/api/cookbook?user_id=${user_id}&recipe_id=${recipe_id}`,
@@ -117,7 +116,7 @@ function CookBookPage() {
             const recipeInfo = JSON.parse(ingre.recipe_information)
               if(ingredient == null || recipeInfo.title.toLowerCase().includes(ingredient.toLowerCase()))
               return (
-                <RecipeCard arrayKey={index} arrayObject={recipeInfo} />
+                <RecipeCard arrayKey={index} arrayObject={recipeInfo} typeHover="cookbookView" viewRecipe={()=>handleRecipeInformation(recipeInfo)} deleteRecipe={()=>handleDeleteCookbook(ingre.user_id, ingre.recipe_id)} />
                     )
               
               return null;
