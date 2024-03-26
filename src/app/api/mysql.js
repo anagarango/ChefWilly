@@ -1,37 +1,34 @@
-import mysql from "mysql2/promise"
+import mysql from "mysql2/promise";
+
 const pool = mysql.createPool({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
-  port:process.env.MYSQLPORT,
-  connectionLimit: 3
+  port: process.env.MYSQLPORT,
+  connectionLimit: 150
 });
 
-// pool.getConnection(function(err, connection) {
-//   connection.query( 'SELECT * FROM users', function(err, rows) {
-
-//     console.log(pool._freeConnections.indexOf(connection)); // -1
-
-//       connection.release();
-
-//       console.log(pool._freeConnections.indexOf(connection)); // 0
-
-//  });
-// });
-
-// export default pool
+// Handle application shutdown to release all connections in the pool
+process.on('beforeExit', async () => {
+  console.log('Closing MySQL connections...');
+  await pool.end();
+  console.log('MySQL connections closed.');
+});
 
 export default async function connection(query, values) {
-  let connection;
+  let connect;
   try {
-    connection = await pool.getConnection();
-    const result = await connection.query(query, values);
+    connect = await pool.getConnection();
+    const result = await connect.query(query, values);
     return result;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
   } finally {
-    console.log(connection._events)
-    if (connection) {
-      connection.release();
-    }
+    pool.releaseConnection(connect)
+    if(connect){
+      connect.release()
+    } 
   }
 }

@@ -14,24 +14,27 @@ interface Recipe {
   missedIngredients: any[]
 }
 
-export default function RecipeCard({arrayObject, relatedRecipes, arrayKey, typeHover="missingIngredients", viewRecipe, deleteRecipe}:{arrayObject:Recipe, relatedRecipes?:string, arrayKey:number, typeHover?:string, viewRecipe?:MouseEventHandler<SVGElement>, deleteRecipe?:MouseEventHandler<SVGElement>}){
+export default function RecipeCard({arrayObject, relatedRecipes, cookbookRecipes, arrayKey, typeHover="missingIngredients", viewRecipe, deleteRecipe}:{arrayObject:Recipe, relatedRecipes?:string, cookbookRecipes?: string, arrayKey:number, typeHover?:string | boolean, viewRecipe?:MouseEventHandler<SVGElement>, deleteRecipe?:MouseEventHandler<SVGElement>}){
   const r = useRouter()
   const [missingHover, setMissingHover] = useState("")
 
 
   const handleRecipeInformation = async (recipe:Recipe) => {
+    console.log(recipe)
     if(relatedRecipes){
       localStorage.setItem("relatedRecipes", relatedRecipes)
+    } else if(cookbookRecipes){
+      localStorage.setItem("cookbookRecipes", cookbookRecipes)
     }
     
     r.push(`/recipe?title=${recipe.title}&id=${recipe.id}`)
   }
 
   return (
-    <Flex id="what" position="relative" onMouseOver={()=>setMissingHover(arrayObject.title)} onMouseOut={()=>setMissingHover("")} bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={arrayKey} onClick={()=>typeHover=="missingIngredients" &&  handleRecipeInformation(arrayObject)} marginTop="50px" boxShadow="0px 5px 10px 0px rgba(0,0,0,0.3)" cursor={typeHover=="missingIngredients" ? "pointer" : ""}>
+    <Flex id="what" position="relative" onMouseOver={()=>setMissingHover(arrayObject.title)} onMouseOut={()=>setMissingHover("")} bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={arrayKey} onClick={()=>(typeHover=="missingIngredients" || typeHover==false) &&  handleRecipeInformation(arrayObject)} marginTop="50px" boxShadow="0px 5px 10px 0px rgba(0,0,0,0.3)" cursor={(typeHover=="missingIngredients" || typeHover==false) ? "pointer" : ""}>
       <Image src={arrayObject.image} alt={arrayObject.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
       <Text wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{arrayObject.title}</Text>
-      {missingHover == arrayObject.title && 
+      {(typeHover && missingHover == arrayObject.title) && 
         <Box position="absolute" bg="rgba(255,255,250,0.9)" width="170px" height="180px" top="0" borderRadius="25px" p="15px" overflowY="scroll">
           {typeHover == "missingIngredients" && <>
             <Text fontWeight="bold" wordBreak="normal" textAlign="center" fontSize="sm">Missing Ingredients:</Text>
@@ -39,6 +42,7 @@ export default function RecipeCard({arrayObject, relatedRecipes, arrayKey, typeH
               {arrayObject.missedIngredients && arrayObject.missedIngredients.map((o:any,i:number)=>(
                 <li key={i} style={{fontWeight:"500", fontSize:"13px"}}>{o.name}</li>
               ))}
+              
             </ol>
           </>}
           {typeHover == "cookbookView" && <>

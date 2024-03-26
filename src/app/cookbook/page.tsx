@@ -1,14 +1,12 @@
 "use client"
-import Image from "next/image";
-import { Button, Box, Flex, Heading, Text, Input, ScaleFade, useToast } from '@chakra-ui/react'
+import { Flex, Heading, Input, useToast } from '@chakra-ui/react'
 import axios from "axios";
 import React, {useEffect, useState, Suspense} from "react"
 import { useRouter } from "next/navigation";
-import AisleList from "../../../public/filter.json"
 import Header from "../components/Header";
 import Colors from "../../../public/colors.json"
-import { CloseIcon, ViewIcon } from "@chakra-ui/icons";
 import RecipeCard from "../components/Recipe"
+import Image from 'next/image';
 
 
 interface RecipeInfo {
@@ -26,22 +24,33 @@ interface IngredientCard {
   recipe_information: string,
 }
 
+interface UserInfo {
+  id: number, 
+  username: string, 
+  email: string, 
+  password: string, 
+  createdAt: string
+}
+
+interface ToastMessage {
+  title: string,
+  description: string,
+  status: "success" | "info" | "warning" | "error" | "loading",
+  duration: number,
+  isClosable: boolean,
+  position: string
+}
+
+
 function CookBookPage() {
   const r = useRouter()
   const toast = useToast()
 
-  const [currentUser, setCurrentUser] = useState<any>()
-  const [ingredient, setIngredient] = useState<string | null>(null)
-  const [ingredientData, setIngredientData] = useState("");
+  const [currentUser, setCurrentUser] = useState<UserInfo>()
+  const [recipeSearch, setRecipeSearch] = useState<string>("")
   const [cookbookArray, setCookbookArray] = useState<IngredientCard[]>([]);
-  const [toastMessage, setToastMessage] = useState<any>();
-  const [deleteHover, setDeleteHover] = useState<string>("")
+  const [toastMessage, setToastMessage] = useState<ToastMessage>();
 
-  const handleIngredientDataShow = (id:string) => {
-    if(id !== "ingredient-selection"){
-      setIngredientData("")
-    }
-  }
 
   const handleGrabbingIngredients = async (user_id?:number) => {
     const response = await axios({
@@ -49,7 +58,6 @@ function CookBookPage() {
       url: `/api/cookbook?user_id=${user_id}`,
     });
     const result = await response.data
-    console.log(result.rows[0])
     setCookbookArray(result.rows[0])
   }
 
@@ -61,7 +69,6 @@ function CookBookPage() {
     localStorage.setItem("cookbookRecipes", JSON.stringify(recipeArray))
     r.push(`/recipe?title=${recipe.title}&id=${recipe.id}`)
   }
-
   
   const handleDeleteCookbook = async (user_id:number, recipe_id:number) => {
     const response = await axios({
@@ -69,8 +76,8 @@ function CookBookPage() {
       url: `/api/cookbook?user_id=${user_id}&recipe_id=${recipe_id}`,
     });
     const result = await response.data
-    
     if(result){
+      setToastMessage({"title": "Recipe Removed!", "description":"We've removed the recipe from your cookbook.", "status": "success", "duration":6000, "isClosable":true, "position":"bottom-right"})
       setCookbookArray((oldValues: any[]) => {
         return oldValues.filter(object => object.recipe_id !== recipe_id)
       })
@@ -80,7 +87,6 @@ function CookBookPage() {
 
 
   useEffect(()=>{
-
     const storedRecipesString = sessionStorage.getItem("currentUser");
     if (storedRecipesString) {
       const storedRecipes: any = JSON.parse(storedRecipesString);
@@ -103,71 +109,29 @@ function CookBookPage() {
   }, [toastMessage]); 
 
   return (
-    <main onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleIngredientDataShow((e.target as HTMLButtonElement).id)} style={{backgroundColor:Colors.lightRed}}>
+    <main style={{backgroundColor:Colors.lightRed}}>
       <Flex flexDir="column" alignItems="center" position="relative" backgroundImage="url('/RedSquiggle.svg')"  backgroundSize="auto 100%" px="6" backgroundRepeat="x-repeat" height="300px">
         <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:any) => setCurrentUser(e)} color={{"bg":Colors.lightRed, text:Colors.strongRed}} />
-        <Flex marginY="30" width="100%" padding="3" height="fit-content" maxWidth="1100px" bgColor="white" borderRadius="10" gap="4">
-          <Input id="ingredient-selection" type="text" autoComplete="off"  size='sm' variant='filled' bgColor={Colors.mediumRed} _hover={{bgColor:Colors.mediumRed}} placeholder='Insert Recipe Name...' value={ingredient || ""} onChange={(e)=>setIngredient(e.target.value)} onClick={()=>setIngredientData("acorn squash")} borderRadius="5px"/>
+        <Flex marginY="30" width="100%" padding="3" height="fit-content" maxWidth="1100px" bgColor="white" borderRadius="10">
+          <Input type="text" autoComplete="off" size='sm' variant='filled' placeholder='Insert Recipe Name...' bgColor={Colors.mediumRed} _hover={{bgColor:Colors.mediumRed}} value={recipeSearch} onChange={(e)=>setRecipeSearch(e.target.value)} borderRadius="5px"/>
         </Flex>
       </Flex>
-      <Flex w="100%" justifyContent="center" paddingBottom="28">
+      <Flex flexDirection="column" width="100%" height="100%" alignItems="center" justifyContent="center" paddingBottom="28">
         <Flex flexWrap="wrap" gap={5} width="100%" maxW="1100px" p={6}>
           {cookbookArray.map((ingre: IngredientCard, index) => {
             const recipeInfo = JSON.parse(ingre.recipe_information)
-              if(ingredient == null || recipeInfo.title.toLowerCase().includes(ingredient.toLowerCase()))
-              return (
-                <RecipeCard arrayKey={index} arrayObject={recipeInfo} typeHover="cookbookView" viewRecipe={()=>handleRecipeInformation(recipeInfo)} deleteRecipe={()=>handleDeleteCookbook(ingre.user_id, ingre.recipe_id)} />
-                    )
-              
-              return null;
-            })}
+              if(recipeSearch == null || recipeInfo.title.toLowerCase().includes(recipeSearch.toLowerCase())){
+                return <RecipeCard arrayKey={index} arrayObject={recipeInfo} typeHover="cookbookView" viewRecipe={()=>handleRecipeInformation(recipeInfo)} deleteRecipe={()=>handleDeleteCookbook(ingre.user_id, ingre.recipe_id)} />
+              }
+          })}
         </Flex>
+        {!cookbookArray.length && 
+          <Flex flexDirection="column" width="100%" height="100%" alignItems="center">
+            <Image src="/recipe.png" alt="No Recipes" width={120} height={120} />
+            <Heading as="h4" fontSize="lg" >No Recipes Added Yet</Heading>
+          </Flex>
+        }
       </Flex>
-
-      {/* <Flex w="100%" justifyContent="center" paddingBottom="28">
-        <Box width="90%" maxWidth="1100px">
-        
-          {AisleList.mealType.list.map((o:string,i:number)=>{ 
-            if(cookbookArray.some((item) => {
-              const recipeInfo = JSON.parse(item.recipe_information);
-              console.log(recipeInfo.title, ingredient, recipeInfo.title.toLowerCase().includes(ingredient?.toLowerCase()))
-              return recipeInfo.title.toLowerCase().includes(ingredient?.toLowerCase());
-            }))
-            return(
-            <Box key={i}>
-              {cookbookArray.some((item) => {
-                const recipeInfo = JSON.parse(item.recipe_information);
-                return recipeInfo.dishTypes[0] === o;
-              }) && (
-                <Box width="100%" maxW="1100px">
-                  <Heading as='h4' size='md' color={Colors.strongRed} paddingTop="14" textTransform="capitalize">{o}</Heading>
-                  <Flex width="100%" overflowX="scroll" height="260px" gap="5" paddingX="20px" alignItems="center">
-                    {cookbookArray.map((ingre: IngredientCard, index) => {
-                      const recipeInfo = JSON.parse(ingre.recipe_information)
-                      if(recipeInfo.dishTypes[0] === o) {
-                        if(ingredient == null || recipeInfo.title.toLowerCase().includes(ingredient.toLowerCase()))
-                        return (
-                                <Flex id="what" position="relative" bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={index} onMouseOver={()=>setDeleteHover(recipeInfo.title)} onMouseOut={()=>setDeleteHover("")}  marginTop="50px" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)">
-                                  <Image src={recipeInfo.image} alt={recipeInfo.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
-                                  <Text wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{recipeInfo.title}</Text>
-                                  {deleteHover == recipeInfo.title && 
-                                    <Flex position="absolute" bg="rgba(255,255,250,0.9)" flexDirection="column" width="170px" height="180px" top="0" borderRadius="25px" p="35px" justifyContent="space-between" alignItems="center">
-                                      <CloseIcon cursor="pointer" boxSize={5} color={Colors.strongRed} onClick={(e:any) => handleDeleteCookbook(ingre.user_id, ingre.recipe_id, e)} />
-                                      <ViewIcon cursor="pointer" boxSize={7} color={Colors.strongRed} onClick={(e:any)=>handleRecipeInformation(recipeInfo, e)} />
-                                    </Flex>
-                                  }
-                                </Flex>
-                              )
-                        }
-                        return null;
-                      })}
-                  </Flex>
-                </Box>
-              )}
-            </Box>
-          )})}
-        </Box>
-      </Flex> */}
     </main>
   );
 }

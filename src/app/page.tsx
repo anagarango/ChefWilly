@@ -59,7 +59,7 @@ export default function Home() {
     
     const recipeArray = []
     for(var x = 0; x < result.rows[0].length; x++){
-      recipeArray.push(result.ingredients[x].ingredient_name)
+      recipeArray.push(result.rows[0][x].ingredient_name)
     }
     
     setSelectedIngredients(recipeArray)
@@ -98,6 +98,7 @@ export default function Home() {
     const storedUser = sessionStorage.getItem("currentUser")
     if(storedUser){
       const storedUserInfo: any = JSON.parse(storedUser);
+      console.log(storedUserInfo)
       setCurrentUser(storedUserInfo)
       handleGrabbingIngredients(storedUserInfo.id)
     }
@@ -175,9 +176,9 @@ export default function Home() {
               <hr style={{margin:"25px 0", border:`1px solid ${Colors.strongOrange}`}}/>
               <Flex gap="2" flexWrap="wrap">
                 {selectedIngredients.map((o,i)=>(
-                  <Flex key={i} borderRadius='10px' border={`1px solid ${Colors.strongOrange}`} alignItems="center" gap={1} padding="3px 10px">
-                    <Text color={Colors.strongOrange}>{o}</Text>
-                    <CloseIcon color={Colors.strongOrange} cursor="pointer" boxSize="6" p={2} onClick={()=>setSelectedIngredients(selectedIngredients.filter(item => item !== o))} />
+                  <Flex key={i} borderRadius='10px' border={`1px solid ${Colors.strongOrange}`} alignItems="center" padding="3px 10px">
+                    <Text color={Colors.strongOrange} fontSize="sm">{o}</Text>
+                    <CloseIcon color={Colors.strongOrange} cursor="pointer" boxSize="6" paddingLeft={3.5} onClick={()=>setSelectedIngredients(selectedIngredients.filter(item => item !== o))} />
                   </Flex>
                 ))}
               </Flex>

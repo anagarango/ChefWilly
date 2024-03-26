@@ -49,7 +49,7 @@ function Recipe() {
       url: `/api/ingredients?user_id=${user_id}`,
     });
     const result = await response.data
-    setIngredientArray(result.ingredients)
+    setIngredientArray(result.rows[0])
   }
 
   const handleAddingIngredients = async (ing?:any) => {
@@ -157,6 +157,12 @@ function Recipe() {
               )}
             </Box>
           ))}
+          {ingredientArray.length < 1 && 
+          <Flex flexDirection="column" width="100%" height="100%" alignItems="center">
+            <Image src="/ingredient.png" alt="No Recipes" width={120} height={120} />
+            <Heading as="h4" fontSize="lg" >No Recipes Added Yet</Heading>
+          </Flex>
+        }
         </Box>
       </Flex>
     </main>

@@ -16,8 +16,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { user_id, ingredient } = await request.json();
-    const rows = await connection("SELECT ingredient_name FROM ingredients WHERE user_id = ? AND ingredient_name = ?", [user_id, ingredient[0].name]);
-    if (rows) {
+    const rows: any[] = await connection("SELECT ingredient_name FROM ingredients WHERE user_id = ? AND ingredient_name = ?", [user_id, ingredient[0].name]);
+    console.log(rows[0])
+    if (rows[0].length) {
       return NextResponse.json({error: {"title": "Ingredient Already Exists!", "description":"This ingrdient has already been added", "status": "error", "duration":6000}});
     }
     const result = await connection("INSERT INTO ingredients (user_id, ingredient_id, ingredient_name, aisle, image) VALUES (?, ?, ?, ?, ?)", [user_id, ingredient[0].id, ingredient[0].name, ingredient[0].aisle, ingredient[0].image]);

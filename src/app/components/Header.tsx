@@ -90,8 +90,8 @@ export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrent
     localStorage.removeItem("cookbookRecipes")
     sessionStorage.removeItem("currentUser")
     
-      r.push("/")
-      window.location.reload();
+    r.push("/")
+    window.location.reload();
   }
 
   const GrabAllUsersChats = async (e:SessionStorage) =>{
