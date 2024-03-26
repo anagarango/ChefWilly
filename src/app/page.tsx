@@ -9,6 +9,7 @@ import IngredientList from "../../public/ingredients.json"
 import Header from "./components/Header";
 import Colors from "../../public/colors.json"
 import PopularRecipes from "../../public/popularFoods.json"
+import RecipeCard from "./components/Recipe";
 import { CloseIcon } from "@chakra-ui/icons";
 
 
@@ -25,7 +26,6 @@ export default function Home() {
 
   const [currentUser, setCurrentUser] = useState<any>();
   const [recipes, setRecipes] = useState<object[]>([]);
-  const [missingHover, setMissingHover] = useState<string>("")
   const [ingredient, setIngredient] = useState<string>("")
   const [recipeResults, setRecipeResults] = useState<number>(20)
   const [ingredientData, setIngredientData] = useState("");
@@ -58,17 +58,11 @@ export default function Home() {
     const result = await response.data
     
     const recipeArray = []
-    for(var x = 0; x < result.ingredients.length; x++){
+    for(var x = 0; x < result.rows[0].length; x++){
       recipeArray.push(result.ingredients[x].ingredient_name)
     }
     
     setSelectedIngredients(recipeArray)
-  }
-
-
-  const handleRecipeInformation = async (recipe:RecipeCard) => {
-    localStorage.setItem("relatedRecipes", JSON.stringify(recipes))
-    r.push(`/recipe?title=${recipe.title}&id=${recipe.id}`)
   }
 
   
@@ -146,20 +140,7 @@ export default function Home() {
           <Heading as='h4' size='md' paddingBottom="5px">Popular Recipes</Heading>
           <Flex width="100%" overflowX="scroll" height="275px" gap="5" paddingX="20px" alignItems="center">
             {PopularRecipes.results.map((o:any,i:number)=> (
-              <Flex id="what" position="relative" onMouseOver={()=>setMissingHover(o.title)} onMouseOut={()=>setMissingHover("")} bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={i} onClick={()=>handleRecipeInformation(o)} marginTop="50px" boxShadow="0px 5px 10px 0px rgba(0,0,0,0.3)" cursor="pointer">
-                <Image src={o.image} alt={o.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
-                <Text wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{o.title}</Text>
-                {missingHover == o.title && 
-                  <Box position="absolute" bg="rgba(255,255,250,0.9)" width="170px" height="180px" top="0" borderRadius="25px" p="15px" overflowY="scroll">
-                    <Text fontWeight="bold" wordBreak="normal" textAlign="center" fontSize="sm">Missing Ingredients:</Text>
-                    <ol style={{padding:"0 0 0 35px"}}>
-                      {o.missedIngredients.map((o:any,i:number)=>(
-                        <li key={i} style={{fontWeight:"500", fontSize:"13px"}}>{o.name}</li>
-                      ))}
-                    </ol>
-                  </Box>
-                }
-              </Flex>
+              <RecipeCard arrayKey={i} arrayObject={o} relatedRecipes={JSON.stringify(recipes)}/>
             ))}
           </Flex>
           <hr style={{margin:"75px 0", border:`1px solid ${Colors.strongOrange}`}}/>
@@ -206,20 +187,7 @@ export default function Home() {
           <Flex marginTop={10} flexWrap="wrap" gap="4" justifyContent={loading ? "center" : "space-between"}>
             {loading && <Spinner color={Colors.strongOrange} boxSize={28} />}
             {(recipes && !loading) && recipes.map((o:any,i:number)=>(
-              <Flex  position="relative" onMouseOver={()=>setMissingHover(o.title)} onMouseOut={()=>setMissingHover("")} bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={i} onClick={()=>handleRecipeInformation(o)} marginTop="50px" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)" cursor="pointer">
-                <Image src={o.image} alt={o.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
-                <Text wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{o.title}</Text>
-                {missingHover == o.title && 
-                  <Box position="absolute" bg="rgba(255,255,250,0.9)" width="170px" height="180px" top="0" borderRadius="25px" p="15px" overflowY="scroll">
-                    <Text fontWeight="bold" wordBreak="normal" textAlign="center" fontSize="sm">Missing Ingredients:</Text>
-                    <ol style={{padding:"0 0 0 35px"}}>
-                      {o.missedIngredients.map((o:any,i:number)=>(
-                        <li key={i} style={{fontWeight:"500", fontSize:"13px"}}>{o.name}</li>
-                      ))}
-                    </ol>
-                  </Box>
-                }
-              </Flex>
+              <RecipeCard arrayKey={i} arrayObject={o} relatedRecipes={JSON.stringify(recipes)}/>
             ))}
             {recipes.length < 1 && 
               <Flex flexDir="column" justifyContent="center" alignItems="center" width="100%" height="60vh">

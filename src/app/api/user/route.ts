@@ -7,10 +7,9 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const email = searchParams.get("email")
     const password = searchParams.get("password")
-    const connectionInstance = await connection;
-    const [rows] : any[] = await connectionInstance.query("SELECT * FROM user WHERE email = ? AND password = ?", [email, password]);
-    if (rows[0]) {
-      return NextResponse.json({message: rows[0]});
+    const rows = await connection("SELECT * FROM user WHERE email = ? AND password = ?", [email, password]);
+    if (rows) {
+      return NextResponse.json({rows});
     }
     return NextResponse.json({ error: "Email or password does not match"});
 
@@ -22,17 +21,16 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { username, email, password } = await request.json();
-    const connectionInstance = await connection;
-    const [rows] : any[] = await connectionInstance.query("SELECT * FROM user WHERE email = ?", [email]);
-    if (rows[0]) {
+    const rows = await connection("SELECT * FROM user WHERE email = ?", [email]);
+    if (rows) {
       return NextResponse.json({error: "Email already in use"});
     }
-    const result = await connectionInstance.query("INSERT INTO user (username, email, password) VALUES (?, ?, ?)",[username, email, password]);
-    const [user] : any[] = await connectionInstance.query("SELECT * FROM user WHERE email = ?", [email]);
+    const result = await connection("INSERT INTO user (username, email, password) VALUES (?, ?, ?)",[username, email, password]);
+    const user = await connection("SELECT * FROM user WHERE email = ?", [email]);
 
-    return NextResponse.json({ message: user[0]});
+    return NextResponse.json({ message: user});
 
   } catch (error:any) {
-    return NextResponse.json({ message: error.message }, {status: 500});
+    return NextResponse.json({ message: error }, {status: 500});
   }
 }

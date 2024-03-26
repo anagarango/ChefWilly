@@ -45,14 +45,15 @@ export default function LogIn({showModal, closeFeedback = () => {}, currentUserI
   
     const messageData = await response.data;
   
-    if (messageData.message) {
-      sessionStorage.setItem("currentUser", JSON.stringify(messageData.message));
-      currentUserId(messageData.message);
+    if (messageData.rows[0]) {
+      
+      sessionStorage.setItem("currentUser", JSON.stringify(messageData.rows[0]));
+      currentUserId(messageData.rows[0]);
       setWarning(false);
       closeFeedback(false);
-      window.location.reload();
+      // window.location.reload();
     } else {
-      setWarning(true);
+      // setWarning(true);
     }
   
     emailRef.current!.value = "";

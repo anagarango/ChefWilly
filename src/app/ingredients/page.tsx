@@ -137,7 +137,7 @@ function Recipe() {
         <Box width="90%" maxWidth="1100px">
           {AisleList.aisle.map((o:string,i:number)=>(
             <Box key={i}>
-              {ingredientArray.some((item:IngredientCard) => item?.aisle === o) && (
+              {ingredientArray && ingredientArray.some((item:IngredientCard) => item?.aisle === o) && (
                 <>
                   <Heading as='h4' size='md' color={Colors.strongYellow} paddingTop="14" paddingBottom="3">{o}</Heading>
                   <Flex flexWrap="wrap" gap="4">

@@ -8,9 +8,10 @@ import AisleList from "../../../public/filter.json"
 import Header from "../components/Header";
 import Colors from "../../../public/colors.json"
 import { CloseIcon, ViewIcon } from "@chakra-ui/icons";
+import RecipeCard from "../components/Recipe"
 
 
-interface RecipeCard {
+interface RecipeInfo {
   id: number,
   title: string,
   image: string,
@@ -25,7 +26,7 @@ interface IngredientCard {
   recipe_information: string,
 }
 
-function CookBook() {
+function CookBookPage() {
   const r = useRouter()
   const toast = useToast()
 
@@ -48,10 +49,11 @@ function CookBook() {
       url: `/api/cookbook?user_id=${user_id}`,
     });
     const result = await response.data
-    setCookbookArray(result.ingredients)
+    console.log(result.rows[0])
+    setCookbookArray(result.rows[0])
   }
 
-  const handleRecipeInformation = async (recipe:RecipeCard, e:any) => {
+  const handleRecipeInformation = async (recipe:RecipeInfo, e:any) => {
     const recipeArray = []
     for(var x = 0; x < cookbookArray.length; x++){
       recipeArray.push(JSON.parse(cookbookArray[x].recipe_information))
@@ -115,16 +117,7 @@ function CookBook() {
             const recipeInfo = JSON.parse(ingre.recipe_information)
               if(ingredient == null || recipeInfo.title.toLowerCase().includes(ingredient.toLowerCase()))
               return (
-                      <Flex id="what" position="relative" bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={index} onMouseOver={()=>setDeleteHover(recipeInfo.title)} onMouseOut={()=>setDeleteHover("")}  marginTop="50px" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)">
-                        <Image src={recipeInfo.image} alt={recipeInfo.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
-                        <Text wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{recipeInfo.title}</Text>
-                        {deleteHover == recipeInfo.title && 
-                          <Flex position="absolute" bg="rgba(255,255,250,0.9)" flexDirection="column" width="170px" height="180px" top="0" borderRadius="25px" p="35px" justifyContent="space-between" alignItems="center">
-                            <ViewIcon cursor="pointer" boxSize={7} color={Colors.strongRed} onClick={(e:any)=>handleRecipeInformation(recipeInfo, e)} />
-                            <CloseIcon cursor="pointer" boxSize={5} color={Colors.strongRed} onClick={(e:any) => handleDeleteCookbook(ingre.user_id, ingre.recipe_id, e)} />
-                          </Flex>
-                        }
-                      </Flex>
+                <RecipeCard arrayKey={index} arrayObject={recipeInfo} />
                     )
               
               return null;
@@ -180,10 +173,10 @@ function CookBook() {
   );
 }
 
-export default function RecipeCard(){
+export default function Cookbook(){
   return (
     <Suspense fallback={<p>Loading feed...</p>}>
-      <CookBook/>
+      <CookBookPage/>
     </Suspense>
   )
 }
