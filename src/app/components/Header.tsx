@@ -6,6 +6,7 @@ import UserForm from "./UserForm"
 import { useState, useEffect } from "react"
 import { Button, Flex, Heading, Text } from "@chakra-ui/react"
 import Colors from "../../../public/colors.json"
+import Link from "next/link"
 
 interface SessionStorage {
   id:number,
@@ -110,14 +111,14 @@ export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrent
       <Flex alignItems="center" gap="4">
         <Image alt="fictichat logo" width={100} height={100} onClick={()=>handleCurrentPage("/")} style={{width:"125px", cursor:"pointer"}} src="/ChefWilly.svg"/>
         {currentUser && <>
-          <Text id="header-desktop" cursor="pointer" fontWeight="bold" color={currentPage == "/cookbook" ? "black" : "#989898"} onClick={()=>handleCurrentPage("/cookbook")}>Cookbook</Text>
-          <Text id="header-desktop" cursor="pointer" fontWeight="bold" color={currentPage == "/ingredients" ? "black" : "#989898"} onClick={()=>handleCurrentPage("/ingredients")}>Ingredients</Text>
+          <Link id="header-desktop" href={{ pathname: '/cookbook'}} onClick={()=>setCurrentPage("/cookbook")} style={{fontWeight:"bold", color:currentPage == "/cookbook" ? "black" : "#989898", fontSize:"14px"}}>Cookbook</Link>
+          <Link id="header-desktop" href={{ pathname: '/ingredients'}} onClick={()=>setCurrentPage("/ingredients")} style={{fontWeight:"bold", color:currentPage == "/ingredients" ? "black" : "#989898", fontSize:"14px"}}>Ingredients</Link>
         </>}
       </Flex>
       
       <Flex id="header-desktop" className='flex gap-4 items-center'>
         {/* <Image alt={switchTheme || "icon"} onClick={()=>{toggleTheme()}} src={switchTheme == "light" ? "/dark.png" : "/light.png"} width={10} height={10} className="flex w-auto h-[25px] cursor-pointer"/> */}
-        <Button bg={color.bg} color={color.text} _hover={{bgColor:"white"}} onClick={()=>{currentUser ? logOut() : setViewModal("login")}}>{currentUser ? "Sign Out": "Sign In"}</Button>
+        <Button size={"sm"} bg={color.bg} color={color.text} _hover={{bgColor:"white"}} onClick={()=>{currentUser ? logOut() : setViewModal("login")}}>{currentUser ? "Sign Out": "Sign In"}</Button>
       </Flex>
 
       {/* <div id="header-mobile" className='flex gap-4 items-center'>

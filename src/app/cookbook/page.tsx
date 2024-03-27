@@ -24,7 +24,7 @@ interface IngredientCard {
   recipe_information: string,
 }
 
-interface UserInfo {
+interface User {
   id: number, 
   username: string, 
   email: string, 
@@ -46,7 +46,7 @@ function CookBookPage() {
   const r = useRouter()
   const toast = useToast()
 
-  const [currentUser, setCurrentUser] = useState<UserInfo>()
+  const [currentUser, setCurrentUser] = useState<User>()
   const [recipeSearch, setRecipeSearch] = useState<string>("")
   const [cookbookArray, setCookbookArray] = useState<IngredientCard[]>([]);
   const [toastMessage, setToastMessage] = useState<ToastMessage>();
@@ -78,7 +78,7 @@ function CookBookPage() {
     const result = await response.data
     if(result){
       setToastMessage({"title": "Recipe Removed!", "description":"We've removed the recipe from your cookbook.", "status": "success", "duration":6000, "isClosable":true, "position":"bottom-right"})
-      setCookbookArray((oldValues: any[]) => {
+      setCookbookArray((oldValues: IngredientCard[]) => {
         return oldValues.filter(object => object.recipe_id !== recipe_id)
       })
     }
@@ -89,9 +89,11 @@ function CookBookPage() {
   useEffect(()=>{
     const storedRecipesString = sessionStorage.getItem("currentUser");
     if (storedRecipesString) {
-      const storedRecipes: any = JSON.parse(storedRecipesString);
+      const storedRecipes: User = JSON.parse(storedRecipesString);
       setCurrentUser(storedRecipes);
       handleGrabbingIngredients(storedRecipes.id)
+    } else {
+      r.push("/")
     }
   },[])
 
@@ -110,8 +112,8 @@ function CookBookPage() {
 
   return (
     <main style={{backgroundColor:Colors.lightRed}}>
-      <Flex flexDir="column" alignItems="center" position="relative" backgroundImage="url('/RedSquiggle.svg')"  backgroundSize="auto 100%" px="6" backgroundRepeat="x-repeat" height="300px">
-        <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:any) => setCurrentUser(e)} color={{"bg":Colors.lightRed, text:Colors.strongRed}} />
+      <Flex flexDir="column" alignItems="center" position="relative" backgroundImage="url('/RedSquiggle.svg')"  backgroundSize="auto 100%" px="3" backgroundRepeat="x-repeat" height="300px">
+        <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:User) => setCurrentUser(e)} color={{"bg":Colors.lightRed, text:Colors.strongRed}} />
         <Flex marginY="30" width="100%" padding="3" height="fit-content" maxWidth="1100px" bgColor="white" borderRadius="10">
           <Input type="text" autoComplete="off" size='sm' variant='filled' placeholder='Insert Recipe Name...' bgColor={Colors.mediumRed} _hover={{bgColor:Colors.mediumRed}} value={recipeSearch} onChange={(e)=>setRecipeSearch(e.target.value)} borderRadius="5px"/>
         </Flex>

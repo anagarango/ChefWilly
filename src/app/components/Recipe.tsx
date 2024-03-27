@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ViewIcon, CloseIcon } from "@chakra-ui/icons";
 import { MouseEventHandler } from "react";
-import axios from "axios";
 import Colors from "../../../public/colors.json"
+import Link from 'next/link'
 
 interface Recipe {
   id: number,
@@ -31,9 +31,12 @@ export default function RecipeCard({arrayObject, relatedRecipes, cookbookRecipes
   }
 
   return (
-    <Flex id="what" position="relative" onMouseOver={()=>setMissingHover(arrayObject.title)} onMouseOut={()=>setMissingHover("")} bg="white" flexDir="column" width="170px" height="180px" alignItems="center" borderRadius="25px" p="15px" key={arrayKey} onClick={()=>(typeHover=="missingIngredients" || typeHover==false) &&  handleRecipeInformation(arrayObject)} marginTop="50px" boxShadow="0px 5px 10px 0px rgba(0,0,0,0.3)" cursor={(typeHover=="missingIngredients" || typeHover==false) ? "pointer" : ""}>
+    <Link id="what" key={arrayKey} href={{
+      pathname: '/recipe',
+      query: { title: arrayObject.title, id: arrayObject.id }
+    }} onMouseOver={()=>setMissingHover(arrayObject.title)} onMouseOut={()=>setMissingHover("")} style={{display:"flex", position:"relative", backgroundColor:"white", flexDirection:"column", width:"170px", height:"180px", alignItems:"center", borderRadius:"25px", padding:"15px", marginTop:"50px", boxShadow:"0px 5px 10px 0px rgba(0,0,0,0.3)", cursor:(typeHover=="missingIngredients" || typeHover==false) ? "pointer" : ""}}>
       <Image src={arrayObject.image} alt={arrayObject.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
-      <Text wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{arrayObject.title}</Text>
+      <Text fontWeight="600" wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{arrayObject.title}</Text>
       {(typeHover && missingHover == arrayObject.title) && 
         <Box position="absolute" bg="rgba(255,255,250,0.9)" width="170px" height="180px" top="0" borderRadius="25px" p="15px" overflowY="scroll">
           {typeHover == "missingIngredients" && <>
@@ -54,6 +57,6 @@ export default function RecipeCard({arrayObject, relatedRecipes, cookbookRecipes
          
         </Box>
       }
-    </Flex>
+    </Link>
   )
 }

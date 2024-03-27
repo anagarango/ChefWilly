@@ -16,9 +16,9 @@ main {
   background-color: white;
 }
 
-a {
+.recipe a{
   color: #F78154 !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
 }
 
 datalist#ingredient-list *{
@@ -37,4 +37,35 @@ datalist#ingredient-list *{
   #homepage-image{
     top:5vh !important
   }
+}
+
+h1,h2,h3,h4,h5,h6{
+  font-family: "Fraunces", serif !important;
+}
+
+@media screen and (max-width:560px) {
+  #popular-recipes{
+    padding-top: 35vw;
+  }
+
+  #home-heading{
+    font-size: 20px;
+  }
+
+  #home-text{
+    font-size: 14px;
+  }
+
+  h4{
+    font-size: 18px !important;
+  }
+
+  #filter-card-box-outer, #recipe-beginning{
+    flex-direction: column;
+  }
+
+  #filter-card-box{
+    flex-wrap: wrap;
+  }
+
 }

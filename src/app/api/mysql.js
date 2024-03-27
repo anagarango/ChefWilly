@@ -10,11 +10,11 @@ const pool = mysql.createPool({
 });
 
 // Handle application shutdown to release all connections in the pool
-process.on('beforeExit', async () => {
-  console.log('Closing MySQL connections...');
-  await pool.end();
-  console.log('MySQL connections closed.');
-});
+// process.on('beforeExit', async () => {
+//   console.log('Closing MySQL connections...');
+//   await pool.end();
+//   console.log('MySQL connections closed.');
+// });
 
 export default async function connection(query, values) {
   let connect;
@@ -26,9 +26,9 @@ export default async function connection(query, values) {
     console.error("Error executing query:", error);
     throw error;
   } finally {
-    pool.releaseConnection(connect)
     if(connect){
-      connect.release()
+      pool.releaseConnection(connect)
+      // await pool.end();
     } 
   }
 }

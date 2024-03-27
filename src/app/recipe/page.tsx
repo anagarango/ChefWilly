@@ -4,34 +4,60 @@ import { Box, Flex, Checkbox, Heading, Text, Skeleton, SkeletonText, useToast  }
 import axios from "axios";
 import Colors from "../../../public/colors.json"
 import React, {useEffect, useState, Suspense} from "react"
-import { useRouter } from "next/navigation";
 import { useSearchParams } from 'next/navigation'
 import Header from "../components/Header";
 import RecipeCard from "../components/Recipe"
 
 
-interface RecipeInfo {
-  id: number,
+interface Steps {
+  steps : object[]
+}
+
+interface ChosenRecipe {
+  image:string,
+  title:string,
+  summary: string,
+  extendedIngredients:object[],
+  analyzedInstructions:Steps[],
+  spoonacularScore:number,
+  readyInMinutes:number,
+  servings:number
+}
+
+interface Toast {
   title: string,
-  image: string,
-  imageType: string
+  description: string,
+  status: "info" | "warning" | "success" | "error" | "loading",
+  duration: number,
+}
+
+interface DietItem {
+  result: any,
+  name: string
+}
+
+interface User {
+  id: number, 
+  username: string, 
+  email: string, 
+  password: string, 
+  createdAt:string
 }
 
 function RecipePage() {
-  const r = useRouter()
   const searchParams = useSearchParams()
   const toast = useToast()
 
   const search = searchParams.get('id')
-  const [currentUser, setCurrentUser] = useState<any>();
-  const [chosenRecipe, setChosenRecipe] = useState<any>({})
+  const [currentUser, setCurrentUser] = useState<User>();
+  const [chosenRecipe, setChosenRecipe] = useState<ChosenRecipe>({"image":"","title":"","summary": "","extendedIngredients":[],"analyzedInstructions":[],"spoonacularScore":0,"readyInMinutes":0,"servings":0})
   const [relatedRecipes, setRelatedRecipes] = useState<object[]>([])
   const [cookbookRecipes, setCookbookRecipes] = useState<object[]>([])
-  const [equipment, setEquipment] = useState<any>()
-  const [diet, setDiet] = useState<any>()
+  const [equipment, setEquipment] = useState<object[]>()
+  const [diet, setDiet] = useState<DietItem[]>()
   const [cookbookSaved, setCookbookSaved] = useState<boolean>(true)
   const [isLoaded, setIsLoaded] = useState<boolean>(false)
-  const [toastMessage, setToastMessage] = useState<any>();
+  const [toastMessage, setToastMessage] = useState<Toast>();
 
   const handleGrabbingRecipeInformation = async (user_id?:number) => {
     const response = await axios.get(`https://api.spoonacular.com/recipes/${search}/information?apiKey=${process.env.NEXT_PUBLIC_API_KEY}`)
@@ -54,12 +80,12 @@ function RecipePage() {
   }
 
 
-  const handleAddingCookbook  = async (recipe:RecipeInfo) => {
+  const handleAddingCookbook  = async (recipe:ChosenRecipe) => {
     const apiResponse = await axios({
       method: 'post',
       url: "/api/cookbook",
       data: {
-        user_id: currentUser.id,
+        user_id: currentUser?.id,
         cookbook: recipe
       }
     });
@@ -105,22 +131,22 @@ function RecipePage() {
 
   return (
     <main style={{backgroundColor:Colors.lightOrange, height:"fit-content"}}>
-      <Flex flexDir="column" alignItems="center" backgroundImage="url('/OrangeSquiggle.svg')" backgroundSize="clamp(100px, 60%, 1100px) clamp(100px, 56vw, 800px)" backgroundPosition="100% 0%" backgroundRepeat="no-repeat" width="100vw" px="6">
-        <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:any) => setCurrentUser(e)} color={{"bg":Colors.lightOrange, text:Colors.strongOrange}}/>
-        <Flex justifyContent="center" width="100%" height="100%" paddingX={7} paddingY={10}>
-          <Flex flexDir="column" p="10px" marginBottom={14} width="100%" maxW="1000px" border={`2px solid ${Colors.mediumOrange}`}>
-            <Flex flexDir="column" p="40px" bg={Colors.mediumOrange}>
-            <Flex>
-              <Box width="50%" paddingRight={5}>
+      <Flex flexDir="column" alignItems="center" backgroundImage="url('/OrangeSquiggle.svg')" backgroundSize="clamp(100px, 60%, 1100px) clamp(100px, 56vw, 800px)" backgroundPosition="100% 0%" backgroundRepeat="no-repeat" width="100vw" px="3">
+        <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:User) => setCurrentUser(e)} color={{"bg":Colors.lightOrange, text:Colors.strongOrange}}/>
+        <Flex justifyContent="center" width="100%" height="100%" paddingY={10}>
+          <Flex flexDir="column" p="10px" marginBottom={14} width="100%" maxW="1000px" border={`2px solid ${Colors.mediumOrange}`} borderRadius={10}>
+            <Flex flexDir="column" p="25px" bg={Colors.mediumOrange} borderRadius={6}>
+            <Flex id="recipe-beginning">
+              <Box paddingRight={5}>
                 <SkeletonText as='h2' fontSize='3xl' fontWeight="bold" startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1} noOfLines={1} skeletonHeight='5' paddingBottom="10px">{chosenRecipe.title}</SkeletonText>
-                <SkeletonText as='h5' fontWeight="medium" startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1} noOfLines={1} spacing='4' skeletonHeight='2' height='20px' >Ratings: <span>{Math.floor(chosenRecipe.spoonacularScore)}/100</span></SkeletonText>
+                <SkeletonText as='h5' fontWeight="medium" startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1} noOfLines={1} spacing='4' skeletonHeight='2' height='20px' >Ratings: <span>{Math.floor(chosenRecipe?.spoonacularScore)}/100</span></SkeletonText>
                 <SkeletonText as='h5' fontWeight="medium" startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1} noOfLines={1} spacing='4' skeletonHeight='2' height='20px' >Total Time: {chosenRecipe.readyInMinutes} minutes</SkeletonText>
                 <SkeletonText as='h5' fontWeight="medium" startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1} noOfLines={1} spacing='4' skeletonHeight='2' height='20px' >Servings: {chosenRecipe.servings}</SkeletonText>
                 <Flex flexWrap="wrap" gap="4" paddingY="20px">
-                  {diet && diet.map((o:any,i: number) => {
+                  {diet && diet.map((o:DietItem, i: number) => {
                     if(o.result){
                       return (
-                        <Flex flexDir="column" alignItems="center">
+                        <Flex key={i} flexDir="column" alignItems="center">
                           <Image src={`https://spoonacular.com/application/frontend/images/badges/${o.name}.svg`} alt={o.name} width={200} height={200} style={{width:"40px", height:"auto"}}/>
                           <Text fontSize='xs'>{o.name}</Text>
                         </Flex>
@@ -135,7 +161,7 @@ function RecipePage() {
             </Flex>
             <Box>
               <SkeletonText startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1}  mt='4' noOfLines={7} spacing='4' skeletonHeight='2' />
-              <Text dangerouslySetInnerHTML={{ __html: chosenRecipe.summary }} paddingY="25px"></Text>
+              <Text className="recipe" dangerouslySetInnerHTML={{ __html: chosenRecipe.summary }} paddingY="25px"></Text>
               <Heading as='h4' size='md'>Equipment:</Heading>
               <SkeletonText w={12} startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1}  mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />
               <Flex id="checkbox" flexDirection="column" paddingBottom="25px" marginTop={-3}>
@@ -150,8 +176,8 @@ function RecipePage() {
                   <Checkbox key={i} _checked={{ textDecoration: "line-through", color: Colors.strongOrange}} colorScheme='orange' style={{transitionDuration:"0.3s"}}>{o.measures.metric.amount} {o.measures.metric.unitShort} {o.name}</Checkbox>
                 ))}
               </Flex>
-              <Heading as='h4' size='md' paddingBottom="5px">Instructions:</Heading>
-              <SkeletonText w={12} startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1}  mt='4' noOfLines={10} spacing='4' skeletonHeight='2' />
+              <Heading as='h4' size='md'>Instructions:</Heading>
+              <SkeletonText w={12} startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1}  mt='2' noOfLines={10} spacing='4' skeletonHeight='2' />
               <ol style={{padding:"0 0 0 35px"}}>
                 {chosenRecipe.analyzedInstructions?.length > 0 && chosenRecipe.analyzedInstructions[0].steps.map((o:any,i:number)=>(
                   <li key={i} style={{transitionDuration:"0.3s"}}>{o.step}</li>

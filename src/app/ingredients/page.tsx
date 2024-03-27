@@ -10,6 +10,13 @@ import Header from "../components/Header";
 import Colors from "../../../public/colors.json"
 import { CloseIcon } from "@chakra-ui/icons";
 
+interface User {
+  id: number, 
+  username: string, 
+  email: string, 
+  password: string, 
+  createdAt:string
+}
 
 interface RecipeCard {
   id: number,
@@ -27,15 +34,22 @@ interface IngredientCard {
   image:string
 }
 
+interface Toast {
+  title: string,
+  description: string,
+  status: "info" | "warning" | "success" | "error" | "loading",
+  duration: number,
+}
+
 function Recipe() {
   const r = useRouter()
   const toast = useToast()
 
-  const [currentUser, setCurrentUser] = useState<any>()
+  const [currentUser, setCurrentUser] = useState<User>()
   const [ingredient, setIngredient] = useState<string>("")
   const [ingredientData, setIngredientData] = useState("");
   const [ingredientArray, setIngredientArray] = useState<IngredientCard[]>([]);
-  const [toastMessage, setToastMessage] = useState<any>();
+  const [toastMessage, setToastMessage] = useState<Toast>();
 
   const handleIngredientDataShow = (id:string) => {
     if(id !== "ingredient-selection"){
@@ -52,7 +66,7 @@ function Recipe() {
     setIngredientArray(result.rows[0])
   }
 
-  const handleAddingIngredients = async (ing?:any) => {
+  const handleAddingIngredients = async (ing?:string) => {
     const grabIngredientAPI = await axios.get(`https://api.spoonacular.com/food/ingredients/search?apiKey=${process.env.NEXT_PUBLIC_API_KEY}&query=${ing}&number=1&metaInformation=true`)
     const grabIngredientAPIResult = await grabIngredientAPI.data
     
@@ -60,7 +74,7 @@ function Recipe() {
       method: 'post',
       url: "/api/ingredients",
       data: {
-        user_id: currentUser.id,
+        user_id: currentUser?.id,
         ingredient: grabIngredientAPIResult.results
       }
     });
@@ -82,7 +96,7 @@ function Recipe() {
     const result = await response.data
     
     if(result){
-      setIngredientArray((oldValues: any[]) => {
+      setIngredientArray((oldValues: IngredientCard[]) => {
         return oldValues.filter(object => object.ingredient_id !== ingredient_id)
       })
     }
@@ -94,9 +108,11 @@ function Recipe() {
 
     const storedRecipesString = sessionStorage.getItem("currentUser");
     if (storedRecipesString) {
-      const storedRecipes: any = JSON.parse(storedRecipesString);
+      const storedRecipes: User = JSON.parse(storedRecipesString);
       setCurrentUser(storedRecipes);
       handleGrabbingIngredients(storedRecipes.id)
+    } else {
+      r.push("/")
     }
   },[])
 
@@ -115,8 +131,8 @@ function Recipe() {
 
   return (
     <main onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleIngredientDataShow((e.target as HTMLButtonElement).id)} style={{backgroundColor:Colors.lightYellow}}>
-      <Flex flexDir="column" alignItems="center" position="relative" backgroundImage="url('/YellowSquiggle.svg')"  backgroundSize="auto 100%" px="6" backgroundRepeat="x-repeat" height="300px">
-        <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:any) => setCurrentUser(e)} color={{"bg":Colors.lightYellow, text:Colors.strongYellow}} />
+      <Flex flexDir="column" alignItems="center" position="relative" backgroundImage="url('/YellowSquiggle.svg')"  backgroundSize="auto 100%" px="3" backgroundRepeat="x-repeat" height="300px">
+        <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:User) => setCurrentUser(e)} color={{"bg":Colors.lightYellow, text:Colors.strongYellow}} />
         <Flex marginY="30" width="100%" padding="3" height="fit-content" maxWidth="1100px" bgColor="white" borderRadius="10" gap="4">
           <Input id="ingredient-selection" type="text" autoComplete="off"  size='sm' variant='filled' bgColor={Colors.mediumYellow} _hover={{bgColor:Colors.mediumYellow}} placeholder='Insert Ingredients...' value={ingredient} onChange={(e)=>setIngredient(e.target.value)} onClick={()=>setIngredientData("acorn squash")} borderRadius="5px"/>
           <Button size='sm' bgColor={Colors.strongYellow} _hover={{bgColor:Colors.mediumYellow}} onClick={()=>handleAddingIngredients(ingredient)}>Add</Button>
@@ -158,9 +174,9 @@ function Recipe() {
             </Box>
           ))}
           {ingredientArray.length < 1 && 
-          <Flex flexDirection="column" width="100%" height="100%" alignItems="center">
+          <Flex flexDirection="column" width="100%" height="16vh" justifyContent="center" alignItems="center">
             <Image src="/ingredient.png" alt="No Recipes" width={120} height={120} />
-            <Heading as="h4" fontSize="lg" >No Recipes Added Yet</Heading>
+            <Heading as="h4" fontSize="lg" >No Ingredients Added Yet</Heading>
           </Flex>
         }
         </Box>
