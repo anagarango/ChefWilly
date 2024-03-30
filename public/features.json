@@ -1,0 +1,8 @@
+[
+  {"title":"Recipe Search", "image":"/search.png", "description":"Search for recipes based on the ingredients added. The search results are sorted by recipes that require the fewest additional ingredients first, making it easier to find recipes with what they have on hand."},
+  {"title":"Recipe Details", "image":"/recipe-info.png", "description":"View detailed information about each recipe, including ingredients, cooking instructions, preparation time, and serving sizes. Nutritional icons are included showing what diets these recipes fall in."},
+  {"title":"Filtering Options", "image":"/filter.png", "description":"Refine recipe search results based on various criteria such as cuisine type, dietary restrictions, or meal types. "},
+  {"title":"Ingredient Storage", "image":"/natural.png", "description":"Once signed in, users can store their commonly used ingredients. The app provides a database with autocomplete suggestions for users to update/delete their stored ingredients as needed. "},
+  {"title":"Cookbook Storage", "image":"/recipe-book.png", "description":"Refine recipe search results based on various criteria such as cuisine type, dietary restrictions, or meal types. "},
+  {"title":"Secure Authentication", "image":"/verified.png", "description":"Users can create accounts and sign in securely and manage their saved recipes and stored ingredients, ensuring personalization and data persistence across sessions."}
+]

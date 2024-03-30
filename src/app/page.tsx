@@ -7,6 +7,7 @@ import FilterCard from "./components/Filter"
 import Header from "./components/Header";
 import Colors from "../../public/colors.json"
 import PopularRecipes from "../../public/popularFoods.json"
+import Features from "../../public/features.json"
 import RecipeCard from "./components/Recipe";
 import Search from "./components/Search";
 
@@ -147,8 +148,21 @@ export default function Home() {
           </Flex>
         </Flex>
       </Flex>
-      <Flex id="popular-recipes" justifyContent="center">
-        <Box width="100%" maxW="1100px" p="40px">
+      <Flex id="popular-recipes" flexDir="column" alignItems="center" p="40px">
+        {!currentUser && <>
+          <Heading id="home-heading" as='h3' size='lg' textAlign="start" width="100%" fontWeight="black" color={Colors.strongOrange} paddingTop="100px" paddingBottom="25px">Checkout these Features</Heading>
+          <Flex width="100%" maxW="1100px" paddingBottom="100px" flexWrap="wrap" gap="25px" justifyContent="center">
+          {Features.map((o,i)=>(
+            <Box width="47%" key={i}>
+              <Image alt={o.title} src={o.image} width={35} height={35} />
+              <Heading as='h4' size='md' paddingBottom="15px"  paddingTop="10px">{o.title}</Heading>
+              <Text size="xs">{o.description}</Text>
+            </Box>
+          ))}
+          </Flex>
+        </>}
+          
+        <Box width="100%" maxW="1100px" >
           <Heading as='h4' size='md' paddingBottom="5px">Popular Recipes</Heading>
           <Flex width="100%" overflowX="scroll" height="275px" gap="5" paddingX="20px" alignItems="center">
             {PopularRecipes.results.map((o:any,i:number)=> (

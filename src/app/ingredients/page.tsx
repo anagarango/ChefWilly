@@ -64,21 +64,25 @@ function Recipe() {
     });
     const result = await response.data
     setIngredientArray(result.rows[0])
+    console.log(result.rows[0])
   }
 
   const handleAddingIngredients = async (ing?:string) => {
     const grabIngredientAPI = await axios.get(`https://api.spoonacular.com/food/ingredients/search?apiKey=${process.env.NEXT_PUBLIC_API_KEY}&query=${ing}&number=1&metaInformation=true`)
     const grabIngredientAPIResult = await grabIngredientAPI.data
+    const aisleIngredient = grabIngredientAPIResult.results[0].aisle.split(";")
+
     
     const response = await axios({
       method: 'post',
       url: "/api/ingredients",
       data: {
         user_id: currentUser?.id,
-        ingredient: grabIngredientAPIResult.results
+        ingredient: {"aisle": aisleIngredient[0], "id": grabIngredientAPIResult.results[0].id, "image": grabIngredientAPIResult.results[0].image, "name": grabIngredientAPIResult.results[0].name}
       }
     });
     const result = await response.data
+    console.log(result)
     if(result.message){
       setToastMessage(result.message)
       setIngredientArray((prev) => [...prev, result.ingredient])
