@@ -64,13 +64,12 @@ function Recipe() {
     });
     const result = await response.data
     setIngredientArray(result.rows[0])
-    console.log(result.rows[0])
   }
 
-  const handleAddingIngredients = async (ing?:string) => {
-    const grabIngredientAPI = await axios.get(`https://api.spoonacular.com/food/ingredients/search?apiKey=${process.env.NEXT_PUBLIC_API_KEY}&query=${ing}&number=1&metaInformation=true`)
+  const handleAddingIngredients = async (ingredientId?:number) => {
+    const grabIngredientAPI = await axios.get(`https://api.spoonacular.com/food/ingredients/${ingredientId}/information?apiKey=${process.env.NEXT_PUBLIC_API_KEY}&amount=1`)
     const grabIngredientAPIResult = await grabIngredientAPI.data
-    const aisleIngredient = grabIngredientAPIResult.results[0].aisle.split(";")
+    const aisleIngredient = grabIngredientAPIResult.aisle.split(";")
 
     
     const response = await axios({
@@ -78,11 +77,10 @@ function Recipe() {
       url: "/api/ingredients",
       data: {
         user_id: currentUser?.id,
-        ingredient: {"aisle": aisleIngredient[0], "id": grabIngredientAPIResult.results[0].id, "image": grabIngredientAPIResult.results[0].image, "name": grabIngredientAPIResult.results[0].name}
+        ingredient: {"aisle": aisleIngredient[0], "id": grabIngredientAPIResult.id, "image": grabIngredientAPIResult.image, "name": grabIngredientAPIResult.name}
       }
     });
     const result = await response.data
-    console.log(result)
     if(result.message){
       setToastMessage(result.message)
       setIngredientArray((prev) => [...prev, result.ingredient])
@@ -139,13 +137,13 @@ function Recipe() {
         <Header currentUser={currentUser ?  currentUser : ""} setCurrentUserId={(e:User) => setCurrentUser(e)} color={{"bg":Colors.lightYellow, text:Colors.strongYellow}} />
         <Flex marginY="30" width="100%" padding="3" height="fit-content" maxWidth="1100px" bgColor="white" borderRadius="10" gap="4">
           <Input id="ingredient-selection" type="text" autoComplete="off"  size='sm' variant='filled' bgColor={Colors.mediumYellow} _hover={{bgColor:Colors.mediumYellow}} placeholder='Insert Ingredients...' value={ingredient} onChange={(e)=>setIngredient(e.target.value)} onClick={()=>setIngredientData("acorn squash")} borderRadius="5px"/>
-          <Button size='sm' bgColor={Colors.strongYellow} _hover={{bgColor:Colors.mediumYellow}} onClick={()=>handleAddingIngredients(ingredient)}>Add</Button>
+          {/* <Button size='sm' bgColor={Colors.strongYellow} _hover={{bgColor:Colors.mediumYellow}} onClick={()=>handleAddingIngredients(ingredient)}>Add</Button> */}
           <ScaleFade in={ingredientData != ""} unmountOnExit={true} initialScale={0.9} style={{position:"absolute", top:"145px", zIndex:10}}>
             <Flex flexDir="column" bgColor="white" height="fit-content" maxHeight="220px" width="222px" overflowY="scroll" boxShadow="0px 3px 3px 0px rgba(0,0,0,0.1)" borderRadius="6px" borderWidth="1px" py="10px">
               {IngredientList.map((o:any,i:number)=>{
                 if(o.ingredient.includes(ingredient.toLowerCase()) )
                 return(
-                  <Box id="ingredient-selection" key={i} fontSize="sm" textTransform="capitalize" bgColor={ingredientData == o.ingredient ? "gray.100" : ""} onMouseOver={()=>setIngredientData(o.ingredient)} onClick={()=>{handleAddingIngredients(o.ingredient); setIngredientData("")}} p="5px 20px">{o.ingredient}</Box>
+                  <Box id="ingredient-selection" key={i} fontSize="sm" textTransform="capitalize" bgColor={ingredientData == o.ingredient ? "gray.100" : ""} onMouseOver={()=>setIngredientData(o.id)} onClick={()=>{handleAddingIngredients(o.id); setIngredientData("")}} p="5px 20px">{o.ingredient}</Box>
               )
               })}
             </Flex>

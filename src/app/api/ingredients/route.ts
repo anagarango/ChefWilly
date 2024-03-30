@@ -17,7 +17,6 @@ export async function POST(request: NextRequest) {
   try {
     const { user_id, ingredient } = await request.json();
     const rows: any[] = await connection("SELECT ingredient_name FROM ingredients WHERE user_id = ? AND ingredient_name = ?", [user_id, ingredient.name]);
-    console.log(rows[0])
     if (rows[0].length) {
       return NextResponse.json({error: {"title": "Ingredient Already Exists!", "description":"This ingrdient has already been added", "status": "error", "duration":6000}});
     }

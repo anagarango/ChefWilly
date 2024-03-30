@@ -110,7 +110,6 @@ export default function Home() {
     const storedUser = sessionStorage.getItem("currentUser")
     if(storedUser){
       const storedUserInfo: User = JSON.parse(storedUser);
-      console.log(storedUserInfo)
       setCurrentUser(storedUserInfo)
       handleGrabbingIngredients(storedUserInfo.id)
     }

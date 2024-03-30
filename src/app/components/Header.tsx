@@ -4,7 +4,7 @@ import Image from 'next/image'
 import UserForm from "./UserForm"
 // import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
-import { Button, Flex, Heading, Text } from "@chakra-ui/react"
+import { Button, Flex, Heading, Text, Box } from "@chakra-ui/react"
 import Colors from "../../../public/colors.json"
 import Link from "next/link"
 
@@ -29,7 +29,7 @@ export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrent
   const [switchTheme, setSwitchTheme] = useState<string | undefined>("")
   const [currentPage, setCurrentPage] = useState<string>()
   const [viewModal, setViewModal] = useState<string>("")
-  const [showMenu, setShowMenu] = useState<string>("opacity-0")
+  const [showMenu, setShowMenu] = useState<string>("0")
 
   // useEffect(() => {
   //   setSwitchTheme(resolvedTheme)
@@ -121,18 +121,22 @@ export default function Header({currentUser, setCurrentUserId=()=>{}, setCurrent
         <Button size={"sm"} bg={color.bg} color={color.text} _hover={{bgColor:"white"}} onClick={()=>{currentUser ? logOut() : setViewModal("login")}}>{currentUser ? "Sign Out": "Sign In"}</Button>
       </Flex>
 
-      {/* <div id="header-mobile" className='flex gap-4 items-center'>
-        <Image alt={switchTheme || "icon"} onClick={()=>{toggleTheme()}} src={switchTheme == "light" ? "/dark.png" : "/light.png"} width={10} height={10} className="flex w-auto h-[25px] cursor-pointer"/>
-        <Image alt="menu icon" onClick={()=>{setShowMenu(showMenu == "opacity-0" ? "opacity-100" : "opacity-0" )}} src="/menu.png" width={10} height={10} className="flex w-auto h-[25px] cursor-pointer"/>
-      </div> */}
+      <div id="header-mobile" className='flex gap-4 items-center'>
+        {/* <Image alt={switchTheme || "icon"} onClick={()=>{toggleTheme()}} src={switchTheme == "light" ? "/dark.png" : "/light.png"} width={10} height={10} className="flex w-auto h-[25px] cursor-pointer"/> */}
+        <Image alt="menu icon" onClick={()=>{setShowMenu(showMenu == "0" ? "100" : "0" )}} src="/menu.png" width={22} height={22} style={{cursor:"pointer"}} />
+      </div>
       
-
-      {/* <div id="header-mobile" className={`flex-col absolute right-0 ${switchTheme == "light" ? "bg-slate-200 border-gray-300" : "bg-slate-900 border-gray-600"} duration-200 top-14 z-10 border-2  ${showMenu}`}>
-        <div className={`cursor-pointer font-bold p-2  ${currentPage == "/" ? "text-[#50A98D]" : "text-[#989898]"}`} onClick={()=>handleCurrentPage("/")}>Home</div>
-        <div className={`cursor-pointer font-bold p-2 ${currentPage == "/characters" ? "text-[#50A98D]" : "text-[#989898]"}`} onClick={()=>handleCurrentPage("/characters")}>Characters</div>
-        <div className={`p-2 border-t-2 ${switchTheme == "light" ? "border-gray-300" : "border-gray-600"} cursor-pointer duration-200 hover:text-[#50A98D]`} onClick={()=>{setViewModal("feedback")}}>Feedback</div>
-        <div className="p-2 bg-[#287B62] text-white py-2 px-3 cursor-pointer duration-200 hover:bg-[#50A98D]" onClick={()=>{currentUserId ? logOut() : setViewModal("login")}}>{currentUserId ? "Sign Out": "Sign In"}</div>
-      </div> */}
+          <Box id="header-mobile" flexDirection="column" position="absolute" right={0} bg="lightgray" transitionDuration="0.15s" top="10" zIndex="10" borderRadius={5} opacity={showMenu}>
+          {currentUser && 
+            <>
+              <Link href={{ pathname: '/cookbook'}} onClick={()=>setCurrentPage("/cookbook")} style={{fontWeight:"bold", color:"black", fontSize:"14px", padding:"6px"}}>Cookbook</Link>
+              <Link href={{ pathname: '/ingredients'}} onClick={()=>setCurrentPage("/ingredients")} style={{fontWeight:"bold", color:"black", fontSize:"14px", padding:"6px"}}>Ingredients</Link>
+            </>
+          }
+          <Box borderTop="2px solid black" bg="lightgray" color="black" padding="6px" fontWeight="bolder" fontSize="14px" cursor="pointer" onClick={()=>{currentUser ? logOut() : setViewModal("login")}}>{currentUser ? "Sign Out": "Sign In"}</Box>
+        </Box>
+          
+      
       
     </Flex>
     

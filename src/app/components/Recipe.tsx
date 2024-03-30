@@ -20,7 +20,6 @@ export default function RecipeCard({arrayObject, relatedRecipes, cookbookRecipes
 
 
   const handleRecipeInformation = async (recipe:Recipe) => {
-    console.log(recipe)
     if(relatedRecipes){
       localStorage.setItem("relatedRecipes", relatedRecipes)
     } else if(cookbookRecipes){

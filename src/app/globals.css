@@ -33,6 +33,14 @@ datalist#ingredient-list *{
   border: 2px solid #F78154 !important
 }
 
+#header-desktop{
+  display: flex;
+}
+
+#header-mobile{
+  display: none;
+}
+
 @media screen and (max-width:800px) {
   #homepage-image{
     top:5vh !important
@@ -45,7 +53,7 @@ h1,h2,h3,h4,h5,h6{
 
 
 
-@media screen and (max-width:560px) {
+@media screen and (max-width:600px) {
   #popular-recipes{
     padding-top: 35vw;
   }
@@ -79,6 +87,14 @@ h1,h2,h3,h4,h5,h6{
   #recipe-card-image{
     width: 100px !important;
     height: 100px !important;
+  }
+
+  #header-desktop{
+    display: none;
+  }
+  
+  #header-mobile{
+    display: flex;
   }
 
 }
