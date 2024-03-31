@@ -149,7 +149,7 @@ export default function Home() {
       </Flex>
       <Flex id="popular-recipes" flexDir="column" alignItems="center" p="40px">
         {!currentUser && <>
-          <Heading id="home-heading" as='h3' size='lg' textAlign="start" width="100%" fontWeight="black" color={Colors.strongOrange} paddingTop="100px" paddingBottom="25px">Checkout these Features</Heading>
+          <Heading id="home-heading" as='h3' size='lg' textAlign="start" width="100%" maxW="1100px" fontWeight="black" color={Colors.strongOrange} paddingTop="100px" paddingBottom="25px">Checkout these Features</Heading>
           <Flex width="100%" maxW="1100px" paddingBottom="100px" flexWrap="wrap" gap="25px" justifyContent="center">
           {Features.map((o,i)=>(
             <Box width="47%" key={i}>
@@ -165,7 +165,7 @@ export default function Home() {
           <Heading as='h4' size='md' paddingBottom="5px">Popular Recipes</Heading>
           <Flex width="100%" overflowX="scroll" height="275px" gap="5" paddingX="20px" alignItems="center">
             {PopularRecipes.results.map((o:any,i:number)=> (
-              <RecipeCard arrayKey={i} arrayObject={o} relatedRecipes={JSON.stringify(recipes)}/>
+              <RecipeCard arrayKey={i} arrayObject={o} cookbookRecipes={JSON.stringify(PopularRecipes.results)} typeHover=""/>
             ))}
           </Flex>
           <hr style={{margin:"75px 0", border:`1px solid ${Colors.strongOrange}`}}/>
