@@ -25,8 +25,10 @@ datalist#ingredient-list *{
   background-color: aqua;
 }
 
-#what {
-  min-width: 170px !important
+#recipe-card{
+  min-width: 145px;
+  max-width: 145px;
+  height: 145px;
 }
 
 #checkbox label span.chakra-checkbox__control{
@@ -78,12 +80,6 @@ h1,h2,h3,h4,h5,h6{
     flex-wrap: wrap;
   }
 
-  #what{
-    min-width: 160px !important;
-    height: 150px !important;
-    font-size: 12px !important;
-  }
-
   #recipe-card-image{
     width: 100px !important;
     height: 100px !important;
@@ -95,6 +91,11 @@ h1,h2,h3,h4,h5,h6{
   
   #header-mobile{
     display: flex;
+  }
+
+  #features-info{
+    width: 100%;
+    padding-bottom: 30px;
   }
 
 }

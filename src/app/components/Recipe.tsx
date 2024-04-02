@@ -28,19 +28,19 @@ export default function RecipeCard({arrayObject, relatedRecipes, cookbookRecipes
   }
 
   return (
-    <Link id="what" key={arrayKey} href={{
+    <Link id="recipe-card" key={arrayKey} href={{
       pathname: typeHover == "cookbookView" ? "/cookbook" : '/recipe',
       query: typeHover == "cookbookView" ? {} :  { title: arrayObject.title, id: arrayObject.id }
-    }} onMouseOver={()=>setMissingHover(arrayObject.title)} onMouseOut={()=>setMissingHover("")} onClick={()=>{typeHover=="cookbookView" ? console.log("Hey") : handleRecipeInformation()}} style={{display:"flex", position:"relative", backgroundColor:"white", flexDirection:"column", width:"170px", height:"180px", alignItems:"center", borderRadius:"25px", padding:"15px", marginTop:"50px", boxShadow:"0px 5px 10px 0px rgba(0,0,0,0.3)", cursor:(typeHover=="missingIngredients" || typeHover==false) ? "pointer" : "default"}}>
-      <Image id="recipe-card-image" src={arrayObject.image} alt={arrayObject.title} width={200} height={200} style={{width:"125px", height:"125px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
-      <Text fontWeight="600" wordBreak="normal" textAlign="center" paddingY="15px" fontSize="sm">{arrayObject.title}</Text>
+    }} onMouseOver={()=>setMissingHover(arrayObject.title)} onMouseOut={()=>setMissingHover("")} onClick={()=>{typeHover=="cookbookView" ? console.log("Hey") : handleRecipeInformation()}} style={{display:"flex", position:"relative", backgroundColor:"white", flexDirection:"column", width:"145px", height:"145px", alignItems:"center", borderRadius:"25px", padding:"12px", marginTop:"50px", boxShadow:"0px 5px 10px 0px rgba(0,0,0,0.3)", cursor:(typeHover=="missingIngredients" || typeHover==false) ? "pointer" : "default"}}>
+      <Image id="recipe-card-image" src={arrayObject.image} alt={arrayObject.title} width={200} height={200} style={{width:"115px", height:"115px", borderRadius:"50%", objectFit:"cover", marginTop:"-50px"}}/>
+      <Text fontWeight="600" wordBreak="normal" textAlign="center" paddingY="15px" fontSize="xs">{arrayObject.title}</Text>
       {(typeHover && missingHover == arrayObject.title) && 
-        <Box position="absolute" bg="rgba(255,255,250,0.9)" width="170px" zIndex="50" height="180px" top="0" borderRadius="25px" p="15px" overflowY="scroll">
+        <Box position="absolute" bg="rgba(255,255,250,0.9)" width="145px" height="145px" zIndex="50" top="0" borderRadius="25px" p="12px" overflowY="scroll">
           {typeHover == "missingIngredients" && <>
-            <Text fontWeight="bold" wordBreak="normal" textAlign="center" fontSize="sm">Missing Ingredients:</Text>
-            <ol style={{padding:"0 0 0 35px"}}>
+            <Text fontWeight="bold" wordBreak="normal" textAlign="center" fontSize="xs">Missing Ingredients:</Text>
+            <ol style={{padding:"0 0 0 20px"}}>
               {arrayObject.missedIngredients && arrayObject.missedIngredients.map((o:any,i:number)=>(
-                <li key={i} style={{fontWeight:"500", fontSize:"13px"}}>{o.name}</li>
+                <li key={i} style={{fontWeight:"500", fontSize:"12px"}}>{o.name}</li>
               ))}
               
             </ol>
