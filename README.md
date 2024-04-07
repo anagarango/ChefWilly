@@ -56,4 +56,5 @@ npm run dev
 - Chakra-UI
 - Axios
 - MySQL
-- API - [Spoonacular API](https://spoonacular.com/food-api)
+- [Free MySQL Hosting](https://www.freemysqlhosting.net)
+- [Spoonacular API](https://spoonacular.com/food-api)
