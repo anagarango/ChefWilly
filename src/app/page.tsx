@@ -149,10 +149,10 @@ export default function Home() {
       </Flex>
       <Flex id="popular-recipes" flexDir="column" alignItems="center" p="40px">
         {!currentUser && <>
-          <Heading id="home-heading" as='h3' size='lg' textAlign="start" width="100%" fontWeight="black" color={Colors.strongOrange} paddingTop="100px" paddingBottom="25px">Checkout these Features</Heading>
-          <Flex width="100%" maxW="1100px" paddingBottom="100px" flexWrap="wrap" gap="25px" justifyContent="center">
+          <Heading id="home-heading" as='h3' size='lg' textAlign="start" width="100%" maxW="1100px" fontWeight="black" color={Colors.strongOrange} paddingTop="100px" paddingBottom="25px">Checkout these Features</Heading>
+          <Flex width="100%" maxW="1100px" paddingBottom="100px" flexWrap="wrap" gap="35px" justifyContent="center">
           {Features.map((o,i)=>(
-            <Box width="47%" key={i}>
+            <Box id="features-info" width="46%" key={i}>
               <Image alt={o.title} src={o.image} width={35} height={35} />
               <Heading as='h4' size='md' paddingBottom="15px"  paddingTop="10px">{o.title}</Heading>
               <Text size="xs">{o.description}</Text>
@@ -163,9 +163,9 @@ export default function Home() {
           
         <Box width="100%" maxW="1100px" >
           <Heading as='h4' size='md' paddingBottom="5px">Popular Recipes</Heading>
-          <Flex width="100%" overflowX="scroll" height="275px" gap="5" paddingX="20px" alignItems="center">
+          <Flex width="100%" overflowX="scroll" height="240px" gap="5" paddingX="20px" alignItems="center">
             {PopularRecipes.results.map((o:any,i:number)=> (
-              <RecipeCard arrayKey={i} arrayObject={o} relatedRecipes={JSON.stringify(recipes)}/>
+              <RecipeCard arrayKey={i} arrayObject={o} cookbookRecipes={JSON.stringify(PopularRecipes.results)} typeHover=""/>
             ))}
           </Flex>
           <hr style={{margin:"75px 0", border:`1px solid ${Colors.strongOrange}`}}/>
