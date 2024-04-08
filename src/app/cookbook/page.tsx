@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import Colors from "../../../public/colors.json"
 import RecipeCard from "../components/Recipe"
 import Image from 'next/image';
+import Footer from '../components/Footer';
 
 
 interface RecipeInfo {
@@ -118,8 +119,8 @@ function CookBookPage() {
           <Input type="text" autoComplete="off" size='sm' variant='filled' placeholder='Insert Recipe Name...' bgColor={Colors.mediumRed} _hover={{bgColor:Colors.mediumRed}} value={recipeSearch} onChange={(e)=>setRecipeSearch(e.target.value)} borderRadius="5px"/>
         </Flex>
       </Flex>
-      <Flex flexDirection="column" width="100%" height="100%" alignItems="center" justifyContent="center" paddingBottom="28">
-        <Flex flexWrap="wrap" gap={5} width="100%" maxW="1100px" p={6}>
+      <Flex minHeight={"calc(100vh - 405px)"} flexDirection="column" width="100%" alignItems="center">
+        <Flex flexWrap="wrap" gap={5} width="100%" maxW="1100px">
           {cookbookArray.map((ingre: IngredientCard, index) => {
             const recipeInfo = JSON.parse(ingre.recipe_information)
               if(recipeSearch == null || recipeInfo.title.toLowerCase().includes(recipeSearch.toLowerCase())){
@@ -128,12 +129,17 @@ function CookBookPage() {
           })}
         </Flex>
         {!cookbookArray.length && 
-          <Flex flexDirection="column" width="100%" height="100%" alignItems="center">
+          <Flex id="whatttt" flexDirection="column" width="100%" height={"calc(100vh - 405px)"} maxW="1100px" justifyContent="center" alignItems="center" py={16}>
             <Image src="/recipe.png" alt="No Recipes" width={120} height={120} />
             <Heading as="h4" fontSize="lg" >No Recipes Added Yet</Heading>
           </Flex>
         }
+        
       </Flex>
+      <Flex flexDirection="column" width="100%" alignItems="center">
+      <Footer/>
+      </Flex>
+      
     </main>
   );
 }

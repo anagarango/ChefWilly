@@ -10,6 +10,7 @@ import PopularRecipes from "../../public/popularFoods.json"
 import Features from "../../public/features.json"
 import RecipeCard from "./components/Recipe";
 import Search from "./components/Search";
+import Footer from "./components/Footer";
 
 interface User {
   id: number, 
@@ -147,7 +148,7 @@ export default function Home() {
           </Flex>
         </Flex>
       </Flex>
-      <Flex id="popular-recipes" flexDir="column" alignItems="center" p="40px">
+      <Flex id="popular-recipes" flexDir="column" alignItems="center" paddingTop="40px">
         {!currentUser && <>
           <Heading id="home-heading" as='h3' size='lg' textAlign="start" width="100%" maxW="1100px" fontWeight="black" color={Colors.strongOrange} paddingTop="100px" paddingBottom="25px">Checkout these Features</Heading>
           <Flex width="100%" maxW="1100px" paddingBottom="100px" flexWrap="wrap" gap="35px" justifyContent="center">
@@ -193,6 +194,7 @@ export default function Home() {
             {(recipeResults < 101 && recipes.length > 19) && <Box fontWeight="bold" borderRadius="10" width="100%" backgroundColor={Colors.strongOrange} color="white" _hover={{backgroundColor:Colors.strongOrange}} padding="10px 0" textAlign='center' marginTop="20px" cursor="pointer" onClick={()=>handleRecipeSearch("MoreResults")}>{loading ? <Spinner/> : "Show More Results"}</Box>}
           </Flex>
         </Box>
+        <Footer/>
       </Flex>
     </main>
   );

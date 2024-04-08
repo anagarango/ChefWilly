@@ -28,6 +28,7 @@ export default function RecipeCard({arrayObject, relatedRecipes, cookbookRecipes
   }
 
   return (
+    <Flex>
     <Link id="recipe-card" key={arrayKey} href={{
       pathname: typeHover == "cookbookView" ? "/cookbook" : '/recipe',
       query: typeHover == "cookbookView" ? {} :  { title: arrayObject.title, id: arrayObject.id }
@@ -40,7 +41,7 @@ export default function RecipeCard({arrayObject, relatedRecipes, cookbookRecipes
             <Text fontWeight="bold" wordBreak="normal" textAlign="center" fontSize="xs">Missing Ingredients:</Text>
             <ol style={{padding:"0 0 0 20px"}}>
               {arrayObject.missedIngredients && arrayObject.missedIngredients.map((o:any,i:number)=>(
-                <li key={i} style={{fontWeight:"500", fontSize:"12px"}}>{o.name}</li>
+                <li key={o.id} style={{fontWeight:"500", fontSize:"12px"}}>{o.name}</li>
               ))}
               
             </ol>
@@ -55,5 +56,6 @@ export default function RecipeCard({arrayObject, relatedRecipes, cookbookRecipes
         </Box>
       }
     </Link>
+    </Flex>
   )
 }

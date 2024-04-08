@@ -9,6 +9,7 @@ import AisleList from "../../../public/filter.json"
 import Header from "../components/Header";
 import Colors from "../../../public/colors.json"
 import { CloseIcon } from "@chakra-ui/icons";
+import Footer from "../components/Footer";
 
 interface User {
   id: number, 
@@ -151,8 +152,8 @@ function Recipe() {
         </Flex>
       </Flex>
 
-      <Flex w="100%" justifyContent="center" paddingBottom={14}>
-        <Box width="90%" maxWidth="1100px">
+      <Flex minH={"calc(100vh - 405px)"} w="100%" justifyContent="center">
+        <Box height="100%" width="100%" maxWidth="1100px">
           {AisleList.aisle.map((o:string,i:number)=>(
             <Box key={i}>
               {ingredientArray && ingredientArray.some((item:IngredientCard) => item?.aisle === o) && (
@@ -176,12 +177,15 @@ function Recipe() {
             </Box>
           ))}
           {ingredientArray.length < 1 && 
-          <Flex flexDirection="column" width="100%" height="16vh" justifyContent="center" alignItems="center">
-            <Image src="/ingredient.png" alt="No Recipes" width={120} height={120} />
-            <Heading as="h4" fontSize="lg" >No Ingredients Added Yet</Heading>
-          </Flex>
-        }
+            <Flex flexDirection="column" width="100%" height={"calc(100vh - 405px)"} justifyContent="center" alignItems="center" py={16}>
+              <Image src="/ingredient.png" alt="No Recipes" width={120} height={120} />
+              <Heading as="h4" fontSize="lg" >No Ingredients Added Yet</Heading>
+            </Flex>
+          }
         </Box>
+      </Flex>
+      <Flex flexDirection="column" width="100%" alignItems="center">
+        <Footer/>
       </Flex>
     </main>
   );
