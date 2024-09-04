@@ -148,7 +148,7 @@ export default function Home() {
           </Flex>
         </Flex>
       </Flex>
-      <Flex id="popular-recipes" flexDir="column" alignItems="center" paddingTop="40px">
+      <Flex id="popular-recipes" flexDir="column" alignItems="center" padding="25px" paddingTop="40px">
         {!currentUser && <>
           <Heading id="home-heading" as='h3' size='lg' textAlign="start" width="100%" maxW="1100px" fontWeight="black" color={Colors.strongOrange} paddingTop="100px" paddingBottom="25px">Checkout these Features</Heading>
           <Flex width="100%" maxW="1100px" paddingBottom="100px" flexWrap="wrap" gap="35px" justifyContent="center">

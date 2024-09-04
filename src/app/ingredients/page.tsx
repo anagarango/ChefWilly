@@ -144,7 +144,7 @@ function Recipe() {
               {IngredientList.map((o:any,i:number)=>{
                 if(o.ingredient.includes(ingredient.toLowerCase()) )
                 return(
-                  <Box id="ingredient-selection" key={i} fontSize="sm" textTransform="capitalize" bgColor={ingredientData == o.ingredient ? "gray.100" : ""} onMouseOver={()=>setIngredientData(o.id)} onClick={()=>{handleAddingIngredients(o.id); setIngredientData("")}} p="5px 20px">{o.ingredient}</Box>
+                  <Box id="ingredient-selection" key={i + "00"} fontSize="sm" textTransform="capitalize" bgColor={ingredientData == o.ingredient ? "gray.100" : ""} onMouseOver={()=>setIngredientData(o.id)} onClick={()=>{handleAddingIngredients(o.id); setIngredientData("")}} p="5px 20px">{o.ingredient}</Box>
               )
               })}
             </Flex>
@@ -155,7 +155,7 @@ function Recipe() {
       <Flex minH={"calc(100vh - 405px)"} w="100%" justifyContent="center">
         <Box height="100%" width="100%" maxWidth="1100px">
           {AisleList.aisle.map((o:string,i:number)=>(
-            <Box key={i}>
+            <Box key={i + "11"}>
               {ingredientArray && ingredientArray.some((item:IngredientCard) => item?.aisle === o) && (
                 <>
                   <Heading as='h4' size='md' color={Colors.strongYellow} paddingTop="14" paddingBottom="3">{o}</Heading>
@@ -163,7 +163,7 @@ function Recipe() {
                     {ingredientArray.map((ingre: IngredientCard, index) => {
                       if(ingre?.aisle === o) {
                         return (
-                          <Flex key={index} gap="4" bg="white" width="fit-content" alignItems="center" borderRadius="10" py="2" px="4" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)">
+                          <Flex key={index + "22"} gap="4" bg="white" width="fit-content" alignItems="center" borderRadius="10" py="2" px="4" boxShadow="0px 5px 20px 0px rgba(0,0,0,0.3)">
                             <Text key={index} wordBreak="normal" textAlign="center" fontSize="sm" textTransform="capitalize">{ingre.ingredient_name}</Text>
                             <CloseIcon cursor="pointer" boxSize={2} onClick={()=>handleDeleteIngredient(ingre.user_id, ingre.ingredient_id)} />
                           </Flex>

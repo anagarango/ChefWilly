@@ -65,14 +65,15 @@ function RecipePage() {
     const result = await response.data
     const equipmentResult = await equipmentResponse.data
 
-    const cookbookResponse = await axios({
-      method: 'get',
-      url: `/api/cookbook/${user_id}?recipe_id=${search}`,
-    });
+    if(user_id){
+      const cookbookResponse = await axios({
+        method: 'get',
+        url: `/api/cookbook/${user_id}?recipe_id=${search}`,
+      });
+      const cookbookResult = await cookbookResponse.data
+      setCookbookSaved(cookbookResult.cookbookExists.length)
+    }
 
-    const cookbookResult = await cookbookResponse.data
-
-    setCookbookSaved(cookbookResult.cookbookExists.length)
     setChosenRecipe(result)
     setEquipment(equipmentResult.equipment)
     setDiet([{result: result.dairyFree, name: "dairy-free"}, {result: result.glutenFree, name: "gluten-free"}, {result: result.vegan, name: "vegan"}, {result: result.vegetarian, name: "vegetarian"}, {result: result.veryHealthy, name: "healthy"}, {result: result.veryPopular, name: "very-popular"}])
@@ -183,7 +184,7 @@ function RecipePage() {
                   <li key={i} style={{transitionDuration:"0.3s"}}>{o.step}</li>
                 ))}
               </ol>
-              <Skeleton startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1}  fontWeight="bold" borderRadius="10" width="100%" backgroundColor={cookbookSaved ? "gray" : Colors.strongOrange} color={cookbookSaved ? "lightgray" : "white" } _hover={{backgroundColor:cookbookSaved ? "gray" :Colors.strongOrange}} padding="10px 0" textAlign='center' marginTop="20px" cursor={cookbookSaved ? "not-allowed" : "pointer"} onClick={()=>{cookbookSaved ? console.log("Nope") : handleAddingCookbook(chosenRecipe)}}>{cookbookSaved ? "Already Saved to Cookbook" : "Add to Cookbook"}</Skeleton>
+              <Skeleton startColor={Colors.strongOrange} endColor={Colors.skeletonOrange} isLoaded={isLoaded} fadeDuration={1}  fontWeight="bold" borderRadius="10" width="100%" backgroundColor={cookbookSaved ? "gray" : Colors.strongOrange} color={cookbookSaved ? "lightgray" : "white" } _hover={{backgroundColor:cookbookSaved ? "gray" :Colors.strongOrange}} padding="10px 0" textAlign='center' marginTop="20px" cursor={cookbookSaved ? "not-allowed" : "pointer"} onClick={()=>{cookbookSaved ? console.log("Nope") : handleAddingCookbook(chosenRecipe)}}>{currentUser ? cookbookSaved ? "Already Saved to Cookbook" : "Add to Cookbook" : "Sign In to Save to CookBook" }</Skeleton>
             </Box>
             {(relatedRecipes.length > 1 || cookbookRecipes.length > 1) && 
               <>
